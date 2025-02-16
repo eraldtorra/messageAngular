@@ -1,0 +1,128 @@
+:host {
+  display: block;
+}
+
+.con{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+
+.wave-group {
+  position: relative;
+}
+
+.wave-group .input {
+  font-size: 16px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 200px;
+  border: none;
+  border-bottom: 1px solid #515151;
+  background: transparent;
+}
+
+.wave-group .input:focus {
+  outline: none;
+}
+
+.wave-group .label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  display: flex;
+}
+
+.wave-group .label-char {
+  transition: 0.2s ease all;
+  transition-delay: calc(var(--index) * .05s);
+}
+
+.wave-group .input:focus ~ label .label-char,
+.wave-group .input:valid ~ label .label-char {
+  transform: translateY(-20px);
+  font-size: 14px;
+  color: #5264AE;
+}
+
+.wave-group .bar {
+  position: relative;
+  display: block;
+  width: 200px;
+}
+
+.wave-group .bar:before,.wave-group .bar:after {
+  content: '';
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #5264AE;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+.wave-group .bar:before {
+  left: 50%;
+}
+
+.wave-group .bar:after {
+  right: 50%;
+}
+
+.wave-group .input:focus ~ .bar:before,
+.wave-group .input:focus ~ .bar:after {
+  width: 50%;
+}
+
+/* From Uiverse.io by JkHuger */ 
+.rainbow-hover {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ff7576;
+  background-color: #2B3044;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 12px 24px;
+  position: relative;
+  line-height: 24px;
+  border-radius: 9px;
+  box-shadow: 0px 1px 2px #2B3044,
+    0px 4px 16px #2B3044;
+  transform-style: preserve-3d;
+  transform: scale(var(--s, 1)) perspective(600px)
+    rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  perspective: 600px;
+  transition: transform 0.1s;
+}
+
+.sp {
+  background: linear-gradient(
+      90deg,
+      #866ee7,
+      #ea60da,
+      #ed8f57,
+      #fbd41d,
+      #2cca91
+    );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  display: block;
+}
+
+.rainbow-hover:active {
+  transition: 0.3s;
+  transform: scale(0.93);
+}
+

@@ -1,0 +1,25 @@
+<div class="chat-container">
+  <div class="messages" #scrollContainer>
+    <div *ngFor="let message of messages()" 
+         class="message" 
+         [ngClass]="{'sent': message.sender === sender, 'received': message.sender !== sender}">
+      <div class="message-bubble">
+        <div class="sender">{{ message.sender }}</div>
+        <div class="content">{{ message.content }}</div>
+      </div>
+    </div>
+  </div>
+  
+  <form (ngSubmit)="sendMessage()" class="message-form">
+    <div class="input-container">
+      <input [(ngModel)]="newMessage" 
+             name="message" 
+             placeholder="Type a message..."
+             autocomplete="off">
+      <button type="submit" [disabled]="!newMessage">
+        <i class="fas fa-paper-plane"></i>
+        Send
+      </button>
+    </div>
+  </form>
+</div>
