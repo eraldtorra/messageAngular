@@ -30,6 +30,25 @@ export class ChatComponent {
   
   sender = this.usernameService.usernameReadonly();
 
+
+
+  ngOnInit() {
+    this.getUsernam();
+
+    console.log(this.sender);
+  }
+
+  getUsernam(){
+    if(this.sender == null || this.sender == ''){
+      this.usernameService.getUsername().subscribe((username) => {
+        this.sender = username.userName;
+        this.usernameService.setUsername(username.userName);
+
+        console.log(this.sender);
+      })
+    }
+  }
+
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
