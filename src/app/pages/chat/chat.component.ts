@@ -1,8 +1,9 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { WebsocketService } from '../../services/websocket.service';
 import { UsernameService } from '../../services/username.service';
+import { Router } from '@angular/router';
 
 
 
@@ -15,6 +16,9 @@ import { UsernameService } from '../../services/username.service';
 })
 export class ChatComponent {
 
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+  private router = inject(Router);
+
 
   private websocketService = inject(WebsocketService);
   usernameService = inject(UsernameService);
@@ -26,7 +30,22 @@ export class ChatComponent {
   
   sender = this.usernameService.usernameReadonly();
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }
+  }
   
+  getCurrentTime(): string {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
 
   sendMessage(): void {
    
@@ -37,5 +56,9 @@ export class ChatComponent {
       });
       this.newMessage = '';
     }
+  }
+  
+  navigateToHome(): void {
+    this.router.navigate(['/home']);
   }
  }

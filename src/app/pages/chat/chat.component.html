@@ -1,4 +1,10 @@
 <div class="chat-container">
+  <div class="header">
+    <button (click)="navigateToHome()" class="home-button">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </button>
+    <div class="chat-title">Chat Room</div>
+  </div>
   <div class="messages" #scrollContainer>
     <div *ngFor="let message of messages()" 
          class="message" 
@@ -6,6 +12,7 @@
       <div class="message-bubble">
         <div class="sender">{{ message.sender }}</div>
         <div class="content">{{ message.content }}</div>
+        <div class="timestamp">{{ getCurrentTime() }}</div>
       </div>
     </div>
   </div>
