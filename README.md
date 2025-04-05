@@ -1,6 +1,6 @@
 # MessageAngular
 
-A modern frontend web messaging application built with Angular 18 This application provides a responsive interface for real-time messaging and communication.
+A modern frontend web messaging application built with Angular 19.1.4. This application provides a responsive interface for real-time messaging and communication.
 
 ## Features
 
@@ -74,6 +74,8 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Backend Integration
 
 This frontend application is designed to work with RESTful APIs or WebSocket servers. Configure the connection settings in the environment files to connect to your backend service.
+
+The backend project repository is available at: [MessageAngularBackend](https://github.com/eraldtorra/MessageSpring)
 
 ## Additional Resources
 
