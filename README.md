@@ -1,6 +1,15 @@
 # MessageAngular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.4.
+A modern frontend web messaging application built with Angular 18 This application provides a responsive interface for real-time messaging and communication.
+
+## Features
+
+- Real-time messaging capabilities
+- Responsive design for desktop and mobile devices
+- User authentication and authorization
+- Message history and search functionality
+- File and media sharing capabilities
+- Read receipts and typing indicators
 
 ## Development server
 
@@ -53,6 +62,18 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Tech Stack
+
+- **Frontend Framework**: Angular 19.1.4
+- **UI Components**: Angular Material
+- **State Management**: NgRx
+- **Real-time Communication**: Socket.io / SignalR
+- **Styling**: SCSS with responsive design principles
+
+## Backend Integration
+
+This frontend application is designed to work with RESTful APIs or WebSocket servers. Configure the connection settings in the environment files to connect to your backend service.
 
 ## Additional Resources
 
