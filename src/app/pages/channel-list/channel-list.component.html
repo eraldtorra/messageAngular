@@ -1,1 +1,40 @@
-<p>channel-list works!</p>
+<div class="channel-list">
+  <div 
+    *ngFor="let channel of channels" 
+    class="channel-item"
+    pRipple
+    (click)="onChannelClick(channel)"
+  >
+    <div class="avatar-container">
+      <p-avatar 
+        [image]="channel.avatar" 
+        size="large" 
+        shape="circle"
+        class="channel-avatar"
+      ></p-avatar>
+      <div *ngIf="channel.isOnline" class="online-indicator"></div>
+    </div>
+    
+    <div class="channel-content">
+      <div class="channel-header">
+        <h4 class="channel-name">{{ channel.name }}</h4>
+        <div class="channel-meta">
+          <i *ngIf="channel.isMuted" class="pi pi-volume-off mute-icon"></i>
+          <span class="timestamp">{{ channel.timestamp }}</span>
+        </div>
+      </div>
+      
+      <div class="channel-footer">
+        <p class="last-message" [class.own-message]="channel.lastMessage.startsWith('You:')">
+          {{ channel.lastMessage }}
+        </p>
+        <p-badge 
+          *ngIf="channel.unreadCount" 
+          [value]="channel.unreadCount.toString()" 
+          severity="danger"
+          class="unread-badge"
+        ></p-badge>
+      </div>
+    </div>
+  </div>
+</div>

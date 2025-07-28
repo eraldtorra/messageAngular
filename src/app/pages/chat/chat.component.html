@@ -1,32 +1,151 @@
 <div class="chat-container">
-  <div class="header">
-    <button (click)="navigateToHome()" class="home-button">
-      <i class="fas fa-arrow-left"></i> Back to Home
-    </button>
-    <div class="chat-title">Chat Room</div>
+  <!-- Chat Header -->
+  <div class="chat-header">
+    <div class="user-info">
+      <p-avatar 
+        [image]="currentUser.avatar" 
+        size="large" 
+        shape="circle"
+        class="user-avatar"
+      ></p-avatar>
+      <div class="user-details">
+        <h3 class="user-name">{{ currentUser.name }}</h3>
+        <span class="user-status" [class.online]="currentUser.isOnline">
+          {{ currentUser.lastSeen }}
+        </span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <p-button 
+        icon="pi pi-video" 
+        [text]="true" 
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Video call"
+      ></p-button>
+      <p-button 
+        icon="pi pi-phone" 
+        [text]="true" 
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="Voice call"
+      ></p-button>
+      <p-button 
+        icon="pi pi-ellipsis-v" 
+        [text]="true" 
+        [rounded]="true"
+        severity="secondary"
+        pTooltip="More options"
+      ></p-button>
+    </div>
   </div>
-  <div class="messages" #scrollContainer>
-    <div *ngFor="let message of messages()" 
-         class="message" 
-         [ngClass]="{'sent': message.sender === sender, 'received': message.sender !== sender}">
-      <div class="message-bubble">
-        <div class="sender">{{ message.sender }}</div>
-        <div class="content">{{ message.content }}</div>
-        <div class="timestamp">{{ getCurrentTime() }}</div>
+
+  <!-- Messages Area -->
+  <div class="messages-container" #scrollContainer>
+    <!-- Empty State -->
+    <div *ngIf="chatMessages.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="pi pi-comment"></i>
+      </div>
+      <p class="empty-message">No chats here yet...</p>
+    </div>
+
+    <!-- Messages List -->
+    <div *ngIf="chatMessages.length > 0" class="messages-list">
+      <div 
+        *ngFor="let message of chatMessages; trackBy: trackByMessageId; let i = index" 
+        class="message-wrapper"
+        [class.own-message]="message.isOwn"
+      >
+        <!-- Text Message -->
+        <div *ngIf="message.messageType === 'text'" class="message text-message">
+          <div class="message-content">
+            <p>{{ message.content }}</p>
+          </div>
+          <div class="message-meta">
+            <span class="timestamp">{{ formatTime(message.timestamp) }}</span>
+            <i *ngIf="message.isOwn && message.isRead" class="pi pi-check read-receipt"></i>
+          </div>
+        </div>
+
+        <!-- Image Message -->
+        <div *ngIf="message.messageType === 'image'" class="message image-message">
+          <div class="image-content">
+            <img [src]="message.imageUrl" [alt]="message.content" />
+            <div class="image-caption" *ngIf="message.content">
+              <p>{{ message.content }}</p>
+            </div>
+          </div>
+          <div class="message-meta">
+            <span class="timestamp">{{ formatTime(message.timestamp) }}</span>
+            <i *ngIf="message.isOwn && message.isRead" class="pi pi-check read-receipt"></i>
+          </div>
+        </div>
+
+        <!-- Link Message -->
+        <div *ngIf="message.messageType === 'link'" class="message link-message">
+          <div class="message-content" *ngIf="message.content">
+            <p>{{ message.content }}</p>
+          </div>
+          <div class="link-preview" (click)="openLink(message.linkUrl!)">
+            <div class="link-favicon">
+              <i class="pi pi-link"></i>
+            </div>
+            <div class="link-details">
+              <h4 class="link-title">{{ message.linkTitle }}</h4>
+              <p class="link-description">{{ message.linkDescription }}</p>
+              <span class="link-url">{{ message.linkUrl }}</span>
+            </div>
+          </div>
+          <div class="message-meta">
+            <span class="timestamp">{{ formatTime(message.timestamp) }}</span>
+            <i *ngIf="message.isOwn && message.isRead" class="pi pi-check read-receipt"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  
-  <form (ngSubmit)="sendMessage()" class="message-form">
-    <div class="input-container">
-      <input [(ngModel)]="newMessage" 
-             name="message" 
-             placeholder="Type a message..."
-             autocomplete="off">
-      <button type="submit" [disabled]="!newMessage">
-        <i class="fas fa-paper-plane"></i>
-        Send
-      </button>
+
+  <!-- Message Input -->
+  <div class="message-input-container">
+    <div class="input-wrapper">
+      <p-button 
+        icon="pi pi-plus" 
+        [text]="true" 
+        [rounded]="true"
+        severity="secondary"
+        class="attachment-btn"
+        pTooltip="Add attachment"
+      ></p-button>
+      
+      <input 
+        type="text"
+        pInputText
+        [(ngModel)]="newMessage"
+        placeholder="Type your message"
+        class="message-input"
+        (keydown.enter)="sendMessage()"
+        #messageInput
+      />
+      
+      <div class="input-actions">
+        <p-button 
+          icon="pi pi-face-smile" 
+          [text]="true" 
+          [rounded]="true"
+          severity="secondary"
+          pTooltip="Add emoji"
+        ></p-button>
+        
+        <p-button 
+          icon="pi pi-send" 
+          [rounded]="true"
+          severity="primary"
+          [disabled]="!newMessage.trim()"
+          (click)="sendMessage()"
+          class="send-btn"
+        ></p-button>
+      </div>
     </div>
-  </form>
+  </div>
 </div>

@@ -1,8 +1,8 @@
-<div class="card h-screen">
+<div class="card h-full">
   <div class="flex h-full">
     <!-- Left Panel - 20% -->
     <div class="flex flex-column w-3 border-r">
-      <div class="flex pt-3 pl-2 pr-3 gap-3 border-right-2">
+      <div class="flex pt-3 pl-2 pr-3 gap-2 border-right-2">
 
         <p-button icon="pi pi-bars" aria-label="Menu" [text]="true" (click)="menu.toggle($event)" />
         
@@ -17,9 +17,9 @@
       <app-channel-list></app-channel-list>
     </div>   
     
-    <!-- Right Panel - 75% -->
-    <div class="flex items-center justify-center h-full flex-1 w-9">
-      Panel 2
+    <!-- Right Panel - Chat Area -->
+    <div class="flex-1 h-full">
+     <app-chat></app-chat>
     </div>
   </div>
 </div>

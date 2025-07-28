@@ -1,0 +1,27 @@
+
+/* Chat layout fixes */
+.card {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
+
+.flex-1 {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.p-tieredmenu-root-list, 
+.p-tieredmenu-submenu {
+    padding: 0.8em 1em !important;
+    font-size: 1.1rem;
+    width: 295px;
+    align-items: flex-start;
+    gap:28px;
+}

@@ -1,1 +1,42 @@
 @import "primeicons/primeicons.css";
+
+/* Global reset for scroll issues */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background-color: white;
+}
+
+/* Ensure app root takes full height */
+app-root {
+  height: 100%;
+  display: block;
+}
+
+/* Material Icons support for PrimeNG */
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 16px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
+.material-icons.alternate_email:before {
+  content: 'alternate_email';
+}

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../services/AuthService.service';
 import { SplitterModule } from 'primeng/splitter';
@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { MenuItem } from 'primeng/api';
+import { ChatComponent } from "../chat/chat.component";
 
 @Component({
   selector: 'app-home',
@@ -24,10 +25,12 @@ import { MenuItem } from 'primeng/api';
     InputTextModule,
     FormsModule,
     ButtonModule,
-    TieredMenu
-  ],
+    TieredMenu,
+    ChatComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
   router = inject(Router);
@@ -47,16 +50,28 @@ export class HomeComponent implements OnInit {
 
         this.items = [
             {
-                label: 'File',
-                icon: 'pi pi-file',
+                label: 'Acconts Name',
+                icon: 'pi pi-user',
             },
             {
-                label: 'Edit',
-                icon: 'pi pi-file-edit',
+                label: 'Mentions',
+                icon: 'pi pi-at',
             },
             {
-                label: 'Search',
-                icon: 'pi pi-search'
+                label: 'New Direct Message',
+                icon: 'pi pi-pencil'
+            },
+            {
+                label: 'New Group',
+                icon: 'pi pi-users'
+            },
+            {
+                label: 'Dark Mode',
+                icon: 'pi pi-moon'
+            },
+            {
+                label: 'Sign Out',
+                icon: 'pi pi-user'
             }
         ]
 
