@@ -52,6 +52,7 @@ interface ChatUser {
   styleUrl: './chat.component.css',
 })
 export class ChatComponent implements OnInit {
+  
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
   private router = inject(Router);
   private websocketService = inject(WebsocketService);

@@ -176,7 +176,8 @@
 
 .message-meta {
   display: flex;
-  align-items: center;
+  align-items: end;
+  padding: 2px;
   justify-content: flex-end;
   gap: 4px;
   margin-top: 4px;
@@ -330,6 +331,7 @@
   border-top: 1px solid #e5e7eb;
   background-color: #ffffff;
   flex-shrink: 0;
+ 
 }
 
 .input-wrapper {
@@ -341,6 +343,7 @@
   padding: 8px 12px;
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
+  
 }
 
 .input-wrapper:focus-within {
@@ -360,6 +363,7 @@
   font-size: 14px;
   padding: 8px 0;
   min-width: 0;
+  color: #1f2937;
 }
 
 .message-input::placeholder {
