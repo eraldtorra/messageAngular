@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { RippleModule } from 'primeng/ripple';
+import { ChannelChatService } from '../../services/channelChat.service';
+
 
 interface Channel {
   id: number;
@@ -30,6 +32,8 @@ interface Channel {
   styleUrl: './channel-list.component.css'
 })
 export class ChannelListComponent implements OnInit {
+
+  channelService = inject(ChannelChatService);
   
   channels: Channel[] = [];
 
@@ -71,14 +75,6 @@ export class ChannelListComponent implements OnInit {
         isGroup: true
       },
       {
-        id: 5,
-        name: 'Lela Walsh',
-        lastMessage: 'Next time it\'s my turn!',
-        timestamp: '12/22/21',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
-        isOnline: true
-      },
-      {
         id: 6,
         name: 'Roland Marks',
         lastMessage: '@waldo Glad to hear that 😊',
@@ -94,9 +90,11 @@ export class ChannelListComponent implements OnInit {
         isOnline: true
       }
     ];
+
+    this.channelService.setSelectedChannel(this.channels[0]); // Set the first channel as selected by default
   }
 
   onChannelClick(channel: Channel) {
-    console.log('Selected channel:', channel);
+    this.channelService.setSelectedChannel(channel);
   }
 }

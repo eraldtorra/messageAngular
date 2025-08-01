@@ -1,6 +1,6 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, computed } from '@angular/core';
 import { WebsocketService } from '../../services/websocket.service';
 import { UsernameService } from '../../services/username.service';
 import { Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { RippleModule } from 'primeng/ripple';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { ChannelChatService } from '../../services/channelChat.service';
 
 interface ChatMessage {
   id: string;
@@ -58,13 +59,31 @@ export class ChatComponent implements OnInit {
   private websocketService = inject(WebsocketService);
   usernameService = inject(UsernameService);
 
-  // Current chat user info
-  currentUser: ChatUser = {
-    name: 'Bill Kuphal',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
-    isOnline: true,
-    lastSeen: 'Online for 10 mins'
-  };
+  channelService = inject(ChannelChatService);
+
+  // Current chat user info - computed signal that updates when selected channel changes
+  currentUser = computed<ChatUser>(() => {
+    const selectedChannel = this.channelService.getSelectedChannel()();
+    if (selectedChannel) {
+      return {
+        name: selectedChannel.name,
+        avatar: selectedChannel.avatar,
+        isOnline: selectedChannel.isOnline || false,
+        lastSeen: selectedChannel.timestamp
+      };
+    }
+    // Default user if no channel selected
+    return {
+      name: 'Unknown User',
+      avatar: 'https://via.placeholder.com/40',
+      isOnline: false,
+      lastSeen: 'Never'
+    };
+  }); 
+   
+
+   
+  
 
   // Chat messages with rich content
   private sampleMessages: ChatMessage[] = [

@@ -3,15 +3,15 @@
   <div class="chat-header">
     <div class="user-info">
       <p-avatar 
-        [image]="currentUser.avatar" 
+        [image]="currentUser().avatar" 
         size="large" 
         shape="circle"
         class="user-avatar"
       ></p-avatar>
       <div class="user-details">
-        <h3 class="user-name">{{ currentUser.name }}</h3>
-        <span class="user-status" [class.online]="currentUser.isOnline">
-          {{ currentUser.lastSeen }}
+        <h3 class="user-name">{{ currentUser().name }}</h3>
+        <span class="user-status" [class.online]="currentUser().isOnline">
+          {{ currentUser().lastSeen }}
         </span>
       </div>
     </div>
