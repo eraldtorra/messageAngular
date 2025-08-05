@@ -1,6 +1,6 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, computed, effect } from '@angular/core';
 import { WebsocketService } from '../../services/websocket.service';
 import { UsernameService } from '../../services/username.service';
 import { Router } from '@angular/router';
@@ -80,10 +80,25 @@ export class ChatComponent implements OnInit {
       lastSeen: 'Never'
     };
   }); 
-   
 
-   
-  
+  // Chat messages - computed signal that updates based on selected channel
+  chatMessages = computed<ChatMessage[]>(() => {
+    const selectedChannel = this.channelService.getSelectedChannel()();
+    if (selectedChannel) {
+      return this.channelService.getChannelMessages(selectedChannel.id);
+    }
+    return [];
+  });
+
+  // Effect to handle channel changes
+  private channelChangeEffect = effect(() => {
+    const selectedChannel = this.channelService.getSelectedChannel()();
+    if (selectedChannel) {
+      console.log('Channel changed to:', selectedChannel.name);
+      // Scroll to bottom when channel changes
+      setTimeout(() => this.scrollToBottom(), 100);
+    }
+  });
 
   // Chat messages with rich content
   private sampleMessages: ChatMessage[] = [
@@ -152,10 +167,6 @@ export class ChatComponent implements OnInit {
     }
   ];
 
-  // Initialize with empty messages to show empty state
-  // Change this to this.sampleMessages to show sample data
-  chatMessages: ChatMessage[] = [];
-
   newMessage = '';
   sender = this.usernameService.usernameReadonly();
 
@@ -193,7 +204,10 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage(): void {
-    if (this.newMessage.trim()) {
+    let oldMessage: string = this.newMessage;
+    const selectedChannel = this.channelService.getSelectedChannel()();
+
+    if (this.newMessage.trim() && selectedChannel) {
       const newMsg: ChatMessage = {
         id: Date.now().toString(),
         content: this.newMessage,
@@ -203,15 +217,16 @@ export class ChatComponent implements OnInit {
         messageType: 'text'
       };
       
-      this.chatMessages.push(newMsg);
+      this.newMessage = '';
+      
+      // Add message to the current channel
+      this.channelService.addMessageToChannel(selectedChannel.id, newMsg);
       
       // Also send via websocket if needed
       this.websocketService.sendMessage({
-        content: this.newMessage,
+        content: oldMessage,
         sender: this.sender
       });
-      
-      this.newMessage = '';
     }
   }
 
@@ -224,11 +239,22 @@ export class ChatComponent implements OnInit {
   }
 
   loadSampleMessages(): void {
-    this.chatMessages = [...this.sampleMessages];
+    const selectedChannel = this.channelService.getSelectedChannel()();
+    if (selectedChannel) {
+      // Clear existing messages first
+      this.channelService.clearChannelMessages(selectedChannel.id);
+      // Add sample messages
+      this.sampleMessages.forEach(msg => {
+        this.channelService.addMessageToChannel(selectedChannel.id, msg);
+      });
+    }
   }
 
   clearMessages(): void {
-    this.chatMessages = [];
+    const selectedChannel = this.channelService.getSelectedChannel()();
+    if (selectedChannel) {
+      this.channelService.clearChannelMessages(selectedChannel.id);
+    }
   }
   
   navigateToHome(): void {

@@ -5,6 +5,8 @@
     margin: 0;
     padding: 0;
     border-radius: 0;
+    background: var(--bg-primary);
+    border: none;
 }
 
 .flex-1 {
@@ -17,11 +19,127 @@
     height: 100%;
 }
 
+/* Enhanced Tiered Menu Styling */
+.p-tieredmenu {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px var(--shadow) !important;
+    border: 1px solid var(--border-color) !important;
+    backdrop-filter: blur(10px) !important;
+    background: var(--bg-secondary) !important;
+    min-width: 280px !important;
+}
+
 .p-tieredmenu-root-list, 
 .p-tieredmenu-submenu {
-    padding: 0.8em 1em !important;
-    font-size: 1.1rem;
-    width: 295px;
-    align-items: flex-start;
-    gap:28px;
+    padding: 0.75rem !important;
+    font-size: 0.95rem !important;
+    width: 280px;
+    gap: 0.5rem !important;
+}
+
+.p-tieredmenu .p-menuitem-link {
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    color: var(--text-primary) !important;
+}
+
+.p-tieredmenu .p-menuitem-link:hover {
+    background: var(--bg-tertiary) !important;
+    color: var(--accent) !important;
+}
+
+.p-tieredmenu .p-menuitem-link:focus {
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+    background: var(--bg-tertiary) !important;
+}
+
+.p-tieredmenu .p-menuitem-icon {
+    font-size: 1.1rem !important;
+    color: var(--text-secondary) !important;
+    width: 20px !important;
+    text-align: center !important;
+}
+
+.p-tieredmenu .p-menuitem-link:hover .p-menuitem-icon {
+    color: var(--accent) !important;
+}
+
+.p-tieredmenu .p-menuitem-text {
+    font-weight: 500 !important;
+    color: var(--text-primary) !important;
+}
+
+.p-tieredmenu .p-menuitem-link:hover .p-menuitem-text {
+    color: var(--accent) !important;
+}
+
+.p-tieredmenu .p-menu-separator {
+    margin: 0.5rem 0 !important;
+    border-top: 1px solid var(--border-color) !important;
+}
+
+/* Special styling for Account Name item */
+.p-tieredmenu .p-menuitem:first-child .p-menuitem-link {
+    background: linear-gradient(135deg, var(--accent) 0%, #764ba2 100%) !important;
+    color: white !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.p-tieredmenu .p-menuitem:first-child .p-menuitem-link:hover {
+    background: linear-gradient(135deg, var(--accent-hover) 0%, #6b46c1 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(77, 171, 247, 0.4) !important;
+}
+
+.p-tieredmenu .p-menuitem:first-child .p-menuitem-icon,
+.p-tieredmenu .p-menuitem:first-child .p-menuitem-text {
+    color: white !important;
+}
+
+/* Dark Mode item styling */
+.p-tieredmenu .p-menuitem:nth-last-child(2) .p-menuitem-link:hover {
+    background: rgba(255, 193, 7, 0.1) !important;
+    color: var(--warning) !important;
+}
+
+.p-tieredmenu .p-menuitem:nth-last-child(2) .p-menuitem-link:hover .p-menuitem-icon,
+.p-tieredmenu .p-menuitem:nth-last-child(2) .p-menuitem-link:hover .p-menuitem-text {
+    color: var(--warning) !important;
+}
+
+/* Sign Out item styling */
+.p-tieredmenu .p-menuitem:last-child .p-menuitem-link:hover {
+    background: rgba(255, 107, 107, 0.1) !important;
+    color: var(--danger) !important;
+}
+
+.p-tieredmenu .p-menuitem:last-child .p-menuitem-link:hover .p-menuitem-icon,
+.p-tieredmenu .p-menuitem:last-child .p-menuitem-link:hover .p-menuitem-text {
+    color: var(--danger) !important;
+}
+
+/* Search input styling */
+.p-inputtext {
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.p-inputtext:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+}
+
+/* Left panel styling */
+.border-r {
+    border-right: 1px solid var(--border-color) !important;
+    background: var(--bg-primary);
+}
+
+.border-right-2 {
+    border-right: 2px solid var(--border-color) !important;
 }

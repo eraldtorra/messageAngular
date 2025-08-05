@@ -1,0 +1,46 @@
+ <div class="account-info-container">
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-3 p-4">
+            <p-avatar 
+              image="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+              size="xlarge" 
+              shape="circle">
+            </p-avatar>
+            <div>
+              <h2 class="m-0">John Doe</h2>
+              <p class="text-600 m-0">john.doe&#64;example.com</p>
+            </div>
+          </div>
+        </ng-template>
+        
+        <div class="account-details">
+          <div class="field">
+            <label class="font-semibold">Username:</label>
+            <p>&#64;johndoe</p>
+          </div>
+          
+          <div class="field">
+            <label class="font-semibold">Phone:</label>
+            <p>+1 (555) 123-4567</p>
+          </div>
+          
+          <div class="field">
+            <label class="font-semibold">Status:</label>
+            <p class="text-green-600">Online</p>
+          </div>
+          
+          <div class="field">
+            <label class="font-semibold">Member since:</label>
+            <p>January 2024</p>
+          </div>
+        </div>
+        
+        <ng-template pTemplate="footer">
+          <div class="flex gap-2">
+            <p-button label="Edit Profile" icon="pi pi-pencil" />
+            <p-button label="Back to Chat" icon="pi pi-arrow-left" severity="secondary" (click)="goBack()" />
+          </div>
+        </ng-template>
+      </p-card>
+    </div>

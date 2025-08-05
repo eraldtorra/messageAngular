@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../services/AuthService.service';
+import { ThemeService } from '../../services/theme.service';
 import { SplitterModule } from 'primeng/splitter';
 import { ChannelListComponent } from '../channel-list/channel-list.component';
 import { InputIcon } from 'primeng/inputicon';
@@ -35,6 +36,7 @@ import { ChatComponent } from "../chat/chat.component";
 export class HomeComponent implements OnInit {
   router = inject(Router);
   auth = inject(AuthServiceService);
+  themeService = inject(ThemeService);
 
    items: MenuItem[] | undefined;
 
@@ -42,16 +44,38 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/messages']);
   }
 
+  navigateToAccountInfo() {
+    // Navigate to account info page
+    this.router.navigate(['/account-info']);
+  }
+
+  toggleDarkMode() {
+    this.themeService.toggleTheme();
+    // Update the menu item label and icon
+    this.updateMenuItems();
+  }
+
+  updateMenuItems() {
+    const isDark = this.themeService.isDark()();
+    const darkModeItem = this.items?.find(item => item.label?.includes('Mode'));
+    if (darkModeItem) {
+      darkModeItem.label = isDark ? 'Light Mode' : 'Dark Mode';
+      darkModeItem.icon = isDark ? 'pi pi-sun' : 'pi pi-moon';
+    }
+  }
+
   logout() {
     this.auth.logout();
   }
 
    ngOnInit() {
-
+        const isDark = this.themeService.isDark()();
+        
         this.items = [
             {
-                label: 'Acconts Name',
+                label: 'Account Name',
                 icon: 'pi pi-user',
+                command: () => this.navigateToAccountInfo()
             },
             {
                 label: 'Mentions',
@@ -66,12 +90,17 @@ export class HomeComponent implements OnInit {
                 icon: 'pi pi-users'
             },
             {
-                label: 'Dark Mode',
-                icon: 'pi pi-moon'
+                separator: true
+            },
+            {
+                label: isDark ? 'Light Mode' : 'Dark Mode',
+                icon: isDark ? 'pi pi-sun' : 'pi pi-moon',
+                command: () => this.toggleDarkMode()
             },
             {
                 label: 'Sign Out',
-                icon: 'pi pi-user'
+                icon: 'pi pi-sign-out',
+                command: () => this.logout()
             }
         ]
 

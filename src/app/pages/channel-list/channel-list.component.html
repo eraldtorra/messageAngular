@@ -2,6 +2,7 @@
   <div 
     *ngFor="let channel of channels" 
     class="channel-item"
+    [class.selected]="selectedChannel()?.id === channel.id"
     pRipple
     (click)="onChannelClick(channel)"
   >
@@ -25,8 +26,8 @@
       </div>
       
       <div class="channel-footer">
-        <p class="last-message" [class.own-message]="channel.lastMessage.startsWith('You:')">
-          {{ channel.lastMessage }}
+        <p class="last-message" [class.own-message]="channel.lastMessage && channel.lastMessage.startsWith('You:')">
+          {{ channel.lastMessage || '' }}
         </p>
         <p-badge 
           *ngIf="channel.unreadCount" 
