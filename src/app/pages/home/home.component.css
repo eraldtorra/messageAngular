@@ -143,3 +143,235 @@
 .border-right-2 {
     border-right: 2px solid var(--border-color) !important;
 }
+
+/* Search results panel styling */
+.search-results-panel {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.search-results-header {
+    padding: 8px 16px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search-results-content {
+    padding: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Search input with clickable icon */
+.p-inputicon {
+    transition: all 0.2s ease;
+}
+
+.p-inputicon:hover {
+    color: var(--accent) !important;
+    transform: scale(1.1);
+}
+
+/* ===== MOBILE & TABLET RESPONSIVE DESIGN ===== */
+/* Desktop design remains unchanged above */
+
+/* Tablet Styles (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    /* Adjust left panel width for tablets */
+    .w-3 {
+        width: 35% !important;
+    }
+    
+    /* Adjust menu and search spacing */
+    .pt-3 {
+        padding-top: 0.75rem !important;
+    }
+    
+    .pl-2 {
+        padding-left: 0.75rem !important;
+    }
+    
+    .pr-3 {
+        padding-right: 0.75rem !important;
+    }
+    
+    /* Smaller tiered menu for tablet */
+    .p-tieredmenu {
+        min-width: 250px !important;
+    }
+    
+    .p-tieredmenu-root-list, 
+    .p-tieredmenu-submenu {
+        width: 250px;
+        font-size: 0.9rem !important;
+    }
+    
+    /* Adjust search input */
+    input[pInputText] {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+    }
+}
+
+/* Mobile Styles (up to 768px) */
+@media (max-width: 768px) {
+    /* Mobile layout changes */
+    .card .flex {
+        flex-direction: column;
+    }
+    
+    /* Left panel becomes full width and stacked */
+    .w-3 {
+        width: 100% !important;
+        max-height: 50vh;
+        overflow-y: auto;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    
+    /* Right panel takes remaining space */
+    .flex-1 {
+        height: 50vh;
+        overflow: hidden;
+    }
+    
+    /* Adjust header padding for mobile */
+    .pt-3 {
+        padding-top: 0.5rem !important;
+    }
+    
+    .pl-2 {
+        padding-left: 0.5rem !important;
+    }
+    
+    .pr-3 {
+        padding-right: 0.5rem !important;
+    }
+    
+    /* Mobile search input */
+    input[pInputText] {
+        font-size: 16px !important; /* Prevent zoom on iOS */
+        padding: 10px 14px !important;
+    }
+    
+    input[pInputText]::placeholder {
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+    
+    /* Smaller tiered menu for mobile */
+    .p-tieredmenu {
+        min-width: 200px !important;
+        max-width: 90vw !important;
+    }
+    
+    .p-tieredmenu-root-list, 
+    .p-tieredmenu-submenu {
+        width: 200px;
+        padding: 0.5rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .p-tieredmenu .p-menuitem-link {
+        padding: 0.6rem 0.8rem !important;
+        gap: 0.5rem !important;
+    }
+    
+    .p-tieredmenu .p-menuitem-icon {
+        font-size: 1rem !important;
+    }
+    
+    /* Adjust search results panel for mobile */
+    .search-results-panel {
+        max-height: 30vh;
+    }
+    
+    .search-results-header {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .search-results-header h6 {
+        font-size: 0.85rem;
+    }
+    
+    /* Make buttons more touch-friendly */
+    .p-button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    /* Better spacing for mobile */
+    .gap-2 {
+        gap: 0.75rem !important;
+    }
+}
+
+/* Small Mobile Styles (up to 480px) */
+@media (max-width: 480px) {
+    /* Even more compact layout */
+    .pt-3, .pl-2, .pr-3 {
+        padding: 0.25rem !important;
+    }
+    
+    .gap-2 {
+        gap: 0.5rem !important;
+    }
+    
+    /* Smaller search input */
+    input[pInputText] {
+        font-size: 16px !important;
+        padding: 8px 12px !important;
+    }
+    
+    /* Very compact menu */
+    .p-tieredmenu {
+        min-width: 180px !important;
+    }
+    
+    .p-tieredmenu-root-list, 
+    .p-tieredmenu-submenu {
+        width: 180px;
+        padding: 0.4rem !important;
+        font-size: 0.8rem !important;
+    }
+    
+    .p-tieredmenu .p-menuitem-link {
+        padding: 0.5rem 0.6rem !important;
+    }
+    
+    /* Adjust panel heights for small screens */
+    .w-3 {
+        max-height: 45vh;
+    }
+    
+    .flex-1 {
+        height: 55vh;
+    }
+}
+
+/* Landscape Mobile Adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .card .flex {
+        flex-direction: row;
+    }
+    
+    .w-3 {
+        width: 40% !important;
+        max-height: 100vh;
+        border-right: 1px solid var(--border-color) !important;
+        border-bottom: none !important;
+    }
+    
+    .flex-1 {
+        height: 100vh;
+        width: 60%;
+    }
+}

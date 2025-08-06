@@ -1,8 +1,11 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Input, OnChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { RippleModule } from 'primeng/ripple';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { ContextMenu } from 'primeng/contextmenu';
+import { MenuItem } from 'primeng/api';
 import { ChannelChatService } from '../../services/channelChat.service';
 import { Subscription } from 'rxjs';
 
@@ -27,18 +30,27 @@ interface Channel {
     CommonModule,
     AvatarModule,
     BadgeModule,
-    RippleModule
+    RippleModule,
+    ContextMenuModule
   ],
   templateUrl: './channel-list.component.html',
   styleUrl: './channel-list.component.css'
 })
-export class ChannelListComponent implements OnInit, OnDestroy {
+export class ChannelListComponent implements OnInit, OnDestroy, OnChanges {
+
+  @Input() searchFilter: string = '';
+  @Input() showSearchResults: boolean = false;
+  @ViewChild('contextMenu') contextMenu!: ContextMenu;
 
   channelService = inject(ChannelChatService);
   
   channels: Channel[] = [];
+  filteredChannels: Channel[] = [];
   selectedChannel = this.channelService.getSelectedChannel();
   private messageSubscription?: Subscription;
+
+  contextMenuItems: MenuItem[] = [];
+  selectedChannelForMenu?: Channel;
 
   ngOnInit() {
     this.channels = [
@@ -65,7 +77,6 @@ export class ChannelListComponent implements OnInit, OnDestroy {
         lastMessage: this.getLastMessage(3),
         timestamp: 'Yesterday',
         avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face',
-        isMuted: true,
         isGroup: true,
         participants: ['Daryl Bogisich', 'Ian Daniel']
       },
@@ -104,6 +115,74 @@ export class ChannelListComponent implements OnInit, OnDestroy {
     this.messageSubscription = this.channelService.messagesChanged$.subscribe((channelId) => {
       this.updateChannelLastMessage(channelId);
     });
+
+    // Initialize filtered channels
+    this.filterChannels();
+
+    // Initialize context menu items
+    this.initializeContextMenu();
+  }
+
+  initializeContextMenu() {
+    this.contextMenuItems = [
+      {
+        label: 'Mute Notifications',
+        icon: 'pi pi-volume-off',
+        command: () => this.toggleMute(true)
+      },
+      {
+        label: 'Unmute Notifications',
+        icon: 'pi pi-volume-up',
+        command: () => this.toggleMute(false)
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Mark as Read',
+        icon: 'pi pi-check',
+        command: () => this.markAsRead()
+      },
+      {
+        label: 'Clear Chat History',
+        icon: 'pi pi-trash',
+        command: () => this.clearChatHistory()
+      }
+    ];
+  }
+
+  ngOnChanges() {
+    this.filterChannels();
+  }
+
+  filterChannels() {
+    if (!this.searchFilter || this.searchFilter.trim() === '') {
+      this.filteredChannels = [...this.channels];
+    } else {
+      const query = this.searchFilter.toLowerCase().trim();
+      this.filteredChannels = this.channels.filter(channel => {
+        const nameMatch = channel.name.toLowerCase().includes(query);
+        const messageMatch = channel.lastMessage?.toLowerCase().includes(query) || false;
+        const hasMessages = this.hasMessagesInChannel(channel.id);
+        
+        // Show channel if name matches or if it has messages that match the search
+        return nameMatch || (messageMatch && hasMessages);
+      });
+    }
+  }
+
+  hasMessagesInChannel(channelId: number): boolean {
+    const messages = this.channelService.getChannelMessages(channelId);
+    return messages.length > 0;
+  }
+
+  getMessageCount(channelId: number): number {
+    const messages = this.channelService.getChannelMessages(channelId);
+    return messages.length;
+  }
+
+  getDisplayChannels(): Channel[] {
+    return this.filteredChannels;
   }
 
   ngOnDestroy() {
@@ -125,5 +204,92 @@ export class ChannelListComponent implements OnInit, OnDestroy {
 
   onChannelClick(channel: Channel) {
     this.channelService.setSelectedChannel(channel);
+  }
+
+  onChannelRightClick(event: MouseEvent, channel: Channel) {
+    this.selectedChannelForMenu = channel;
+    this.updateContextMenuItems();
+    this.contextMenu.show(event);
+    event.preventDefault();
+  }
+
+  updateContextMenuItems() {
+    if (!this.selectedChannelForMenu) return;
+
+    // Create a fresh context menu based on current channel state
+    this.contextMenuItems = [
+      {
+        label: this.selectedChannelForMenu.isMuted ? 'Unmute Notifications' : 'Mute Notifications',
+        icon: this.selectedChannelForMenu.isMuted ? 'pi pi-volume-up' : 'pi pi-volume-off',
+        command: () => this.toggleMute(!this.selectedChannelForMenu!.isMuted)
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Mark as Read',
+        icon: 'pi pi-check',
+        command: () => this.markAsRead(),
+        disabled: !this.selectedChannelForMenu.unreadCount
+      },
+      {
+        label: 'Clear Chat History',
+        icon: 'pi pi-trash',
+        command: () => this.clearChatHistory()
+      }
+    ];
+  }
+
+  toggleMute(mute: boolean) {
+    if (!this.selectedChannelForMenu) return;
+
+    const channelIndex = this.channels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
+    if (channelIndex !== -1) {
+      this.channels[channelIndex].isMuted = mute;
+      // Update filtered channels as well
+      const filteredIndex = this.filteredChannels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
+      if (filteredIndex !== -1) {
+        this.filteredChannels[filteredIndex].isMuted = mute;
+      }
+      
+      // Optional: Add a toast notification
+      console.log(`Channel ${this.selectedChannelForMenu.name} ${mute ? 'muted' : 'unmuted'}`);
+    }
+  }
+
+  markAsRead() {
+    if (!this.selectedChannelForMenu) return;
+
+    const channelIndex = this.channels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
+    if (channelIndex !== -1) {
+      this.channels[channelIndex].unreadCount = undefined;
+      // Update filtered channels as well
+      const filteredIndex = this.filteredChannels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
+      if (filteredIndex !== -1) {
+        this.filteredChannels[filteredIndex].unreadCount = undefined;
+      }
+      
+      console.log(`Marked ${this.selectedChannelForMenu.name} as read`);
+    }
+  }
+
+  clearChatHistory() {
+    if (!this.selectedChannelForMenu) return;
+    
+    // Clear messages for this channel
+    this.channelService.clearChannelMessages(this.selectedChannelForMenu.id);
+    
+    // Update last message
+    const channelIndex = this.channels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
+    if (channelIndex !== -1) {
+      this.channels[channelIndex].lastMessage = '';
+      // Update filtered channels as well
+      const filteredIndex = this.filteredChannels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
+      if (filteredIndex !== -1) {
+        this.filteredChannels[filteredIndex].lastMessage = '';
+      }
+    }
+    
+    console.log(`Cleared chat history for ${this.selectedChannelForMenu.name}`);
   }
 }

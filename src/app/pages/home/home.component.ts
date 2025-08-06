@@ -38,7 +38,9 @@ export class HomeComponent implements OnInit {
   auth = inject(AuthServiceService);
   themeService = inject(ThemeService);
 
-   items: MenuItem[] | undefined;
+  items: MenuItem[] | undefined;
+  searchQuery: string = '';
+  showSearchResults: boolean = false;
 
   navigateToMessages() {
     this.router.navigate(['/messages']);
@@ -66,6 +68,27 @@ export class HomeComponent implements OnInit {
 
   logout() {
     this.auth.logout();
+  }
+
+  onSearchChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery = target.value;
+  }
+
+  onSearchIconClick() {
+    this.showSearchResults = !this.showSearchResults;
+    console.log('Search icon clicked, showing search results:', this.showSearchResults);
+  }
+
+  onSearchFocus() {
+    this.showSearchResults = true;
+  }
+
+  onSearchBlur() {
+    // Small delay to allow for click events on search results
+    setTimeout(() => {
+      this.showSearchResults = false;
+    }, 200);
   }
 
    ngOnInit() {

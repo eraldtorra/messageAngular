@@ -24,6 +24,12 @@
   border-color: var(--border-color);
 }
 
+.channel-item:active,
+.channel-item.context-menu-active {
+  background-color: var(--bg-tertiary, #f0f0f0);
+  border-color: var(--border-color);
+}
+
 .channel-item.selected {
   background-color: var(--accent);
   color: white;
@@ -209,4 +215,81 @@
   .last-message {
     font-size: 13px;
   }
+}
+
+/* Search results styles */
+.no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-secondary);
+}
+
+.message-count {
+  background: var(--accent);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.message-indicator {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.channel-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.search-results-panel {
+  max-height: 400px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-results-header {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Muted channel styling */
+.channel-item.muted {
+  opacity: 0.7;
+}
+
+.channel-item.muted .channel-name {
+  color: var(--text-muted);
+}
+
+.channel-item.selected.muted .channel-name {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.channel-item.muted .last-message {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* Context menu active state */
+.channel-item.context-active {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+/* Enhanced visual feedback for right-click */
+.channel-item:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
