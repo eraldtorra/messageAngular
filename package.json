@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
     "@auth0/auth0-angular": "^2.2.3",
+    "@ctrl/ngx-emoji-mart": "^9.2.0",
+    "@emoji-mart/data": "^1.2.1",
     "@primeng/themes": "^20.0.0",
     "@stomp/stompjs": "^7.0.0",
     "primeflex": "^4.0.0",

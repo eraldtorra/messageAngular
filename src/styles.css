@@ -1,4 +1,5 @@
 @import "primeicons/primeicons.css";
+@import '@ctrl/ngx-emoji-mart/picker';
 
 /* Global reset for scroll issues */
 html, body {
@@ -11,35 +12,39 @@ html, body {
 /* Light Theme Variables */
 .light-theme {
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #212529;
-  --text-secondary: #6c757d;
-  --text-muted: #adb5bd;
-  --border-color: #dee2e6;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --accent: #007bff;
-  --accent-hover: #0056b3;
-  --success: #28a745;
-  --danger: #dc3545;
-  --warning: #ffc107;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --shadow: rgba(15, 23, 42, 0.08);
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #06b6d4;
+  --purple: #8b5cf6;
 }
 
 /* Dark Theme Variables */
 .dark-theme {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #404040;
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #808080;
-  --border-color: #404040;
-  --shadow: rgba(255, 255, 255, 0.1);
-  --accent: #4dabf7;
-  --accent-hover: #339af0;
-  --success: #51cf66;
-  --danger: #ff6b6b;
-  --warning: #ffd43b;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #475569;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --accent: #60a5fa;
+  --accent-hover: #3b82f6;
+  --success: #34d399;
+  --danger: #f87171;
+  --warning: #fbbf24;
+  --info: #22d3ee;
+  --purple: #a78bfa;
 }
 
 /* Apply theme to body */
@@ -47,6 +52,81 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Universal theme transition for all elements */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Light theme specific overrides */
+.light-theme .p-card {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 1px 3px var(--shadow) !important;
+}
+
+.light-theme .p-inputtext {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.light-theme .p-inputtext:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+}
+
+.light-theme .p-inputtext::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.light-theme .p-button {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: white !important;
+}
+
+.light-theme .p-button:hover {
+  background: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+.light-theme .p-tieredmenu {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 10px 25px var(--shadow) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-link {
+  color: var(--text-primary) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-link:hover {
+  background: var(--bg-secondary) !important;
+  color: var(--accent) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-icon {
+  color: var(--text-secondary) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-link:hover .p-menuitem-icon {
+  color: var(--accent) !important;
+}
+
+.light-theme .p-avatar {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+.light-theme .p-badge {
+  background: var(--danger) !important;
+  color: white !important;
 }
 
 /* Dark theme overrides for PrimeNG components */
@@ -54,6 +134,7 @@ body {
   background: var(--bg-secondary) !important;
   border: 1px solid var(--border-color) !important;
   color: var(--text-primary) !important;
+  box-shadow: 0 4px 6px var(--shadow) !important;
 }
 
 .dark-theme .p-inputtext {
@@ -64,22 +145,30 @@ body {
 
 .dark-theme .p-inputtext:focus {
   border-color: var(--accent) !important;
-  box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2) !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+}
+
+.dark-theme .p-inputtext::placeholder {
+  color: var(--text-muted) !important;
 }
 
 .dark-theme .p-button {
   background: var(--accent) !important;
   border-color: var(--accent) !important;
+  color: white !important;
 }
 
 .dark-theme .p-button:hover {
   background: var(--accent-hover) !important;
   border-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3) !important;
 }
 
 .dark-theme .p-tieredmenu {
   background: var(--bg-secondary) !important;
   border: 1px solid var(--border-color) !important;
+  box-shadow: 0 10px 25px var(--shadow) !important;
 }
 
 .dark-theme .p-tieredmenu .p-menuitem-link {
@@ -88,18 +177,164 @@ body {
 
 .dark-theme .p-tieredmenu .p-menuitem-link:hover {
   background: var(--bg-tertiary) !important;
+  color: var(--accent) !important;
 }
 
 .dark-theme .p-tieredmenu .p-menuitem-icon {
   color: var(--text-secondary) !important;
 }
 
+.dark-theme .p-tieredmenu .p-menuitem-link:hover .p-menuitem-icon {
+  color: var(--accent) !important;
+}
+
 .dark-theme .p-avatar {
   background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
 }
 
 .dark-theme .p-badge {
   background: var(--danger) !important;
+  color: white !important;
+}
+
+/* Light theme button overrides */
+.light-theme .p-button {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: white !important;
+}
+
+.light-theme .p-button:hover {
+  background: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+.light-theme .p-tieredmenu {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 10px 25px var(--shadow) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-link {
+  color: var(--text-primary) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-link:hover {
+  background: var(--bg-secondary) !important;
+  color: var(--accent) !important;
+}
+
+.light-theme .p-tieredmenu .p-menuitem-icon {
+  color: var(--text-secondary) !important;
+}
+
+.light-theme .p-avatar {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+.light-theme .p-badge {
+  background: var(--danger) !important;
+  color: white !important;
+}
+
+/* Scrollbar theming */
+.light-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.light-theme ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.light-theme ::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+.dark-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Emoji Picker Theme Integration */
+.light-theme emoji-mart {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.light-theme emoji-mart .emoji-mart-bar {
+  background: var(--bg-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.light-theme emoji-mart .emoji-mart-search input {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.light-theme emoji-mart .emoji-mart-category-label {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.light-theme emoji-mart .emoji-mart-anchor {
+  color: var(--text-secondary) !important;
+}
+
+.light-theme emoji-mart .emoji-mart-anchor:hover {
+  color: var(--accent) !important;
+  background: var(--bg-secondary) !important;
+}
+
+.dark-theme emoji-mart {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark-theme emoji-mart .emoji-mart-bar {
+  background: var(--bg-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.dark-theme emoji-mart .emoji-mart-search input {
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark-theme emoji-mart .emoji-mart-category-label {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark-theme emoji-mart .emoji-mart-anchor {
+  color: var(--text-secondary) !important;
+}
+
+.dark-theme emoji-mart .emoji-mart-anchor:hover {
+  color: var(--accent) !important;
+  background: var(--bg-tertiary) !important;
 }
 
 /* Ensure app root takes full height */

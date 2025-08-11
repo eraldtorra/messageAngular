@@ -123,19 +123,55 @@
         pInputText
         [(ngModel)]="newMessage"
         placeholder="Type your message"
-        class="message-input"
+        class="message-input px-2"
         (keydown.enter)="sendMessage()"
         #messageInput
       />
       
       <div class="input-actions">
-        <p-button 
-          icon="pi pi-face-smile" 
-          [text]="true" 
-          [rounded]="true"
-          severity="secondary"
-          pTooltip="Add emoji"
-        ></p-button>
+        <div class="emoji-picker-container">
+          <p-button 
+            icon="pi pi-face-smile" 
+            [text]="true" 
+            [rounded]="true"
+            severity="secondary"
+            pTooltip="Add emoji"
+            (click)="toggleEmojiPicker()"
+          ></p-button>
+          
+          <!-- Emoji Picker -->
+          <div class="emoji-picker-wrapper" *ngIf="showEmojiPicker">
+            <div class="emoji-picker-header">
+              <span class="emoji-picker-title">Choose Emoji</span>
+              <button class="emoji-picker-close" (click)="closeEmojiPicker()">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            <emoji-mart 
+              (emojiSelect)="addEmoji($event)"
+              [set]="'apple'"
+              [showPreview]="false"
+              [darkMode]="isDarkMode()"
+              [i18n]="{
+                search: 'Search',
+                notfound: 'No Emoji Found',
+                categories: {
+                  search: 'Search Results',
+                  recent: 'Frequently Used',
+                  people: 'Smileys & People',
+                  nature: 'Animals & Nature',
+                  foods: 'Food & Drink',
+                  activity: 'Activity',
+                  places: 'Travel & Places',
+                  objects: 'Objects',
+                  symbols: 'Symbols',
+                  flags: 'Flags',
+                  custom: 'Custom'
+                }
+              }">
+            </emoji-mart>
+          </div>
+        </div>
         
         <p-button 
           icon="pi pi-send" 

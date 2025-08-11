@@ -53,8 +53,10 @@ export class HomeComponent implements OnInit {
 
   toggleDarkMode() {
     this.themeService.toggleTheme();
-    // Update the menu item label and icon
-    this.updateMenuItems();
+    // Update the menu item label and icon with a slight delay for smooth transition
+    setTimeout(() => {
+      this.updateMenuItems();
+    }, 150);
   }
 
   updateMenuItems() {

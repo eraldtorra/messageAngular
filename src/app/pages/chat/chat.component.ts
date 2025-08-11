@@ -1,8 +1,9 @@
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, OnDestroy, signal, ViewChild, computed, effect } from '@angular/core';
 import { WebsocketService } from '../../services/websocket.service';
 import { UsernameService } from '../../services/username.service';
+import { ThemeService } from '../../services/theme.service';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -12,6 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { RippleModule } from 'primeng/ripple';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ChannelChatService } from '../../services/channelChat.service';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 interface ChatMessage {
   id: string;
@@ -47,17 +49,19 @@ interface ChatUser {
     BadgeModule,
     TooltipModule,
     RippleModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    PickerComponent
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
   private router = inject(Router);
   private websocketService = inject(WebsocketService);
   usernameService = inject(UsernameService);
+  themeService = inject(ThemeService);
 
   channelService = inject(ChannelChatService);
 
@@ -169,10 +173,38 @@ export class ChatComponent implements OnInit {
 
   newMessage = '';
   sender = this.usernameService.usernameReadonly();
+  
+  // Emoji picker state
+  showEmojiPicker = false;
+  private documentClickListener?: (event: Event) => void;
+  
+  // Computed property for dark mode state
+  isDarkMode = computed(() => this.themeService.isDark()());
 
   ngOnInit() {
     this.getUsernam();
     console.log(this.sender);
+    this.setupDocumentClickListener();
+  }
+
+  ngOnDestroy() {
+    if (this.documentClickListener) {
+      document.removeEventListener('click', this.documentClickListener);
+    }
+  }
+
+  private setupDocumentClickListener() {
+    this.documentClickListener = (event: Event) => {
+      const target = event.target as HTMLElement;
+      const emojiPicker = document.querySelector('.emoji-picker-wrapper');
+      const emojiButton = target.closest('.emoji-picker-container');
+      const closeButton = target.closest('.emoji-picker-close');
+      
+      if (this.showEmojiPicker && !emojiPicker?.contains(target) && !emojiButton && !closeButton) {
+        this.showEmojiPicker = false;
+      }
+    };
+    document.addEventListener('click', this.documentClickListener);
   }
 
   getUsernam(){
@@ -255,6 +287,21 @@ export class ChatComponent implements OnInit {
     if (selectedChannel) {
       this.channelService.clearChannelMessages(selectedChannel.id);
     }
+  }
+  
+  // Emoji picker methods
+  toggleEmojiPicker(): void {
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  closeEmojiPicker(): void {
+    this.showEmojiPicker = false;
+  }
+
+  addEmoji(event: any): void {
+    const emoji = event.emoji.native || event.emoji.colons;
+    this.newMessage += emoji;
+    // Don't close picker after selection - let user choose multiple emojis
   }
   
   navigateToHome(): void {

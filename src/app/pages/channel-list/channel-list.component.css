@@ -24,10 +24,34 @@
   border-color: var(--border-color);
 }
 
+/* Light theme specific hover styling */
+.light-theme .channel-item:hover {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+.dark-theme .channel-item:hover {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
 .channel-item:active,
 .channel-item.context-menu-active {
   background-color: var(--bg-tertiary, #f0f0f0);
   border-color: var(--border-color);
+}
+
+/* Light theme specific active styling */
+.light-theme .channel-item:active,
+.light-theme .channel-item.context-menu-active {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+.dark-theme .channel-item:active,
+.dark-theme .channel-item.context-menu-active {
+  background-color: var(--bg-tertiary) !important;
+  border-color: var(--border-color) !important;
 }
 
 .channel-item.selected {
@@ -60,7 +84,7 @@
   right: 2px;
   width: 12px;
   height: 12px;
-  background-color: #10b981;
+  background-color: var(--success);
   border: 2px solid white;
   border-radius: 50%;
 }
@@ -92,6 +116,15 @@
   margin-right: 8px;
 }
 
+/* Light theme specific styling for better readability */
+.light-theme .channel-name {
+  color: #1e293b !important; /* Darker text for better contrast */
+}
+
+.dark-theme .channel-name {
+  color: var(--text-primary) !important;
+}
+
 .channel-item.selected .channel-name {
   color: white;
 }
@@ -118,6 +151,15 @@
   font-weight: 400;
 }
 
+/* Light theme specific timestamp styling */
+.light-theme .timestamp {
+  color: #94a3b8 !important; /* Better contrast for timestamps */
+}
+
+.dark-theme .timestamp {
+  color: var(--text-muted) !important;
+}
+
 .channel-item.selected .timestamp {
   color: rgba(255, 255, 255, 0.8);
 }
@@ -141,6 +183,24 @@
 
 .last-message.own-message {
   color: var(--text-muted);
+}
+
+/* Light theme specific styling for better visibility */
+.light-theme .last-message {
+  color: #64748b !important; /* Darker secondary text for better contrast */
+}
+
+.light-theme .last-message.own-message {
+  color: #94a3b8 !important; /* Slightly darker muted text */
+}
+
+/* Dark theme specific styling */
+.dark-theme .last-message {
+  color: var(--text-secondary) !important;
+}
+
+.dark-theme .last-message.own-message {
+  color: var(--text-muted) !important;
 }
 
 .channel-item.selected .last-message {
@@ -179,22 +239,22 @@
 }
 
 .channel-list::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--border-color);
   border-radius: 2px;
 }
 
 .channel-list::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--text-muted);
 }
 
 /* Selected state (you can add this later when implementing selection) */
 .channel-item.selected {
-  background-color: #eff6ff;
-  border-right: 3px solid #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-right: 3px solid var(--accent);
 }
 
 .channel-item.selected .channel-name {
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 /* Mobile responsiveness */

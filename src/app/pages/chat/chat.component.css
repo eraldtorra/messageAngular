@@ -4,9 +4,10 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
   margin: 0;
   padding: 0;
+  color: var(--text-primary);
 }
 
 /* Chat Header */
@@ -15,8 +16,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
   min-height: 72px;
   flex-shrink: 0;
 }
@@ -44,7 +45,7 @@
 .user-name {
   font-size: 16px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1.2;
   overflow: hidden;
@@ -54,7 +55,7 @@
 
 .user-status {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-muted);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -62,7 +63,7 @@
 }
 
 .user-status.online {
-  color: #10b981;
+  color: var(--success);
 }
 
 .header-actions {
@@ -76,7 +77,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 20px;
-  background-color: #f8fafc;
+  background-color: var(--bg-secondary);
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -92,13 +93,13 @@
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .empty-icon {
   width: 80px;
   height: 80px;
-  background-color: #e5e7eb;
+  background-color: var(--border-color);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -108,13 +109,13 @@
 
 .empty-icon i {
   font-size: 36px;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .empty-message {
   font-size: 16px;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -149,7 +150,7 @@
 
 /* Message Styles */
 .message {
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
   border-radius: 18px;
   padding: 12px 16px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -160,7 +161,7 @@
 }
 
 .own-message .message {
-  background-color: #629bf7;
+  background-color: var(--accent);
   color: white;
 }
 
@@ -176,7 +177,7 @@
 }
 
 .message-user {
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .message-meta {
@@ -190,7 +191,7 @@
 
 .timestamp {
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .own-message .timestamp {
@@ -199,7 +200,7 @@
 
 .read-receipt {
   font-size: 12px;
-  color: #10b981;
+  color: var(--success);
 }
 
 /* Image Message */
@@ -236,12 +237,12 @@
 
 .link-preview {
   margin-top: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
   transition: background-color 0.2s;
-  background-color: #f8fafc;
+  background-color: var(--bg-secondary);
 }
 
 .own-message .link-preview {
@@ -250,7 +251,7 @@
 }
 
 .link-preview:hover {
-  background-color: #f1f5f9;
+  background-color: var(--bg-tertiary);
 }
 
 .own-message .link-preview:hover {
@@ -267,7 +268,7 @@
   flex-shrink: 0;
   width: 32px;
   height: 32px;
-  background-color: #e5e7eb;
+  background-color: var(--border-color);
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -280,7 +281,7 @@
 
 .link-favicon i {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .own-message .link-favicon i {
@@ -295,7 +296,7 @@
 .link-title {
   font-size: 14px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
   margin: 0 0 4px 0;
   line-height: 1.3;
 }
@@ -306,7 +307,7 @@
 
 .link-description {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0 0 4px 0;
   line-height: 1.3;
   display: -webkit-box;
@@ -322,7 +323,7 @@
 
 .link-url {
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -333,8 +334,8 @@
 /* Message Input */
 .message-input-container {
   padding: 16px 20px;
-  border-top: 1px solid #e5e7eb;
-  background-color: #ffffff;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
   flex-shrink: 0;
  
 }
@@ -343,10 +344,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #f8fafc;
+  background-color: var(--bg-secondary);
   border-radius: 24px;
   padding: 8px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   transition: all 0.2s ease;
   
 }
@@ -368,11 +369,11 @@
   font-size: 14px;
   padding: 8px 0;
   min-width: 0;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .message-input::placeholder {
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .input-actions {
@@ -384,6 +385,92 @@
 
 .send-btn {
   flex-shrink: 0;
+}
+
+/* Emoji Picker Styling */
+.emoji-picker-container {
+  position: relative;
+}
+
+.emoji-picker-wrapper {
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+  z-index: 1000;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px var(--shadow);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.emoji-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.emoji-picker-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.emoji-picker-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease;
+}
+
+.emoji-picker-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.emoji-picker-close i {
+  font-size: 12px;
+}
+
+/* Emoji Mart overrides */
+:host ::ng-deep emoji-mart {
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep emoji-mart .emoji-mart-bar {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+:host ::ng-deep emoji-mart .emoji-mart-search input {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+:host ::ng-deep emoji-mart .emoji-mart-category-label {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+:host ::ng-deep emoji-mart .emoji-mart-anchor {
+  color: var(--text-secondary) !important;
+}
+
+:host ::ng-deep emoji-mart .emoji-mart-anchor:hover {
+  color: var(--accent) !important;
 }
 
 /* Scrollbar */
@@ -401,17 +488,17 @@
 }
 
 .messages-container::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--text-muted);
 }
 
 /* Custom PrimeNG overrides */
 :host ::ng-deep .p-button.p-button-text {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 :host ::ng-deep .p-button.p-button-text:hover {
   background-color: #f3f4f6;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 :host ::ng-deep .p-button.p-button-rounded {
