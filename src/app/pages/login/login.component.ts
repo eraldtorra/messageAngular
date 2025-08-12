@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthServiceService } from '../../services/AuthService.service';
 import { CommonModule } from '@angular/common';
 import { Token } from '../../models/token';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -17,11 +18,13 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private authService: AuthServiceService,
     private router: Router,
-    private usernameService: UsernameService
+    private usernameService: UsernameService,
+    private themeService: ThemeService
   ) {}
 
   login() {
@@ -29,6 +32,9 @@ export class LoginComponent {
       this.errorMessage = 'Please enter both username and password';
       return;
     }
+
+    this.isLoading = true;
+    this.errorMessage = '';
 
     this.authService.login(this.username, this.password).subscribe({
       next: (response: Token) => {
@@ -39,11 +45,13 @@ export class LoginComponent {
         this.usernameService.setUsername(this.username);
         // Redirect to home page  
         this.router.navigate(['/home']);
+        this.isLoading = false;
       },
       error: (error) => {
         // Handle login error
         console.error('Login failed', error);
         this.errorMessage = 'Invalid username or password';
+        this.isLoading = false;
       }
     });
   }
@@ -51,6 +59,18 @@ export class LoginComponent {
   register() {
     // Navigate to registration page or handle registration logic
     this.router.navigate(['/register']);
+  }
+
+  goToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+  }
+
+  isDarkMode() {
+    return this.themeService.isDark()();
   }
  
 

@@ -27,6 +27,45 @@ export class AuthServiceService {
     return this.http.post<Token>(`${this.api}/token`, {}, { headers: headers });
   }
 
+  register(username: string, email: string, password: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    
+    const body = {
+      username: username,
+      email: email,
+      password: password
+    };
+    
+    return this.http.post<any>(`${this.api}/register`, body, { headers: headers });
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    
+    const body = {
+      email: email
+    };
+    
+    return this.http.post<any>(`${this.api}/forgot-password`, body, { headers: headers });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    
+    const body = {
+      token: token,
+      newPassword: newPassword
+    };
+    
+    return this.http.post<any>(`${this.api}/reset-password`, body, { headers: headers });
+  }
+
 
   logout() {
     

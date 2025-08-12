@@ -103,8 +103,8 @@
   left: 65px;
 }
 
-/* Login Container */
-.login-container {
+/* Register Container */
+.register-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -138,7 +138,7 @@
   width: 120px;
   height: 120px;
   top: 10%;
-  left: 10%;
+  right: 10%;
   animation-delay: 0s;
 }
 
@@ -146,7 +146,7 @@
   width: 80px;
   height: 80px;
   top: 60%;
-  right: 15%;
+  left: 15%;
   animation-delay: 2s;
 }
 
@@ -154,7 +154,7 @@
   width: 200px;
   height: 200px;
   bottom: 10%;
-  left: 50%;
+  right: 50%;
   animation-delay: 4s;
 }
 
@@ -163,13 +163,13 @@
   50% { transform: translateY(-20px) rotate(180deg); }
 }
 
-/* Login Card */
-.login-card {
+/* Register Card */
+.register-card {
   background: var(--bg-primary);
   border-radius: 20px;
   padding: 40px;
   width: 100%;
-  max-width: 450px;
+  max-width: 480px;
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.1),
     0 8px 25px rgba(0, 0, 0, 0.08);
@@ -192,7 +192,7 @@
 }
 
 /* Header */
-.login-header {
+.register-header {
   text-align: center;
   margin-bottom: 40px;
 }
@@ -208,7 +208,7 @@
   100% { transform: scale(1); }
 }
 
-.login-title {
+.register-title {
   font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -219,7 +219,7 @@
   background-clip: text;
 }
 
-.login-subtitle {
+.register-subtitle {
   color: var(--text-secondary);
   font-size: 1rem;
   margin: 0;
@@ -227,10 +227,10 @@
 }
 
 /* Form Styles */
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .form-group {
@@ -306,7 +306,7 @@
   font-weight: 600;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--purple));
+  background: linear-gradient(135deg, var(--success), var(--accent));
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -316,7 +316,7 @@
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
 }
 
 .btn-primary:disabled {
@@ -386,7 +386,7 @@
   z-index: 2;
 }
 
-/* Error Message */
+/* Messages */
 .error-message {
   display: flex;
   align-items: center;
@@ -400,30 +400,34 @@
   animation: shake 0.5s ease-in-out;
 }
 
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  color: var(--success);
+  font-size: 0.9rem;
+  animation: slideIn 0.5s ease-in-out;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
 }
 
-/* Forgot Password */
-.forgot-password {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.forgot-link {
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  cursor: pointer;
-}
-
-.forgot-link:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive Design */
@@ -446,16 +450,17 @@
     left: 55px;
   }
   
-  .login-container {
+  .register-container {
     padding: 16px;
   }
   
-  .login-card {
+  .register-card {
     padding: 30px 24px;
     border-radius: 16px;
+    max-width: 100%;
   }
   
-  .login-title {
+  .register-title {
     font-size: 1.75rem;
   }
   

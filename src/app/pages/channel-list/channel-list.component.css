@@ -213,6 +213,7 @@
 
 .unread-badge {
   flex-shrink: 0;
+  align-items: anchor-center
 }
 
 /* Custom badge styling */
