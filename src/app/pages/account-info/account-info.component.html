@@ -1,46 +1,158 @@
- <div class="account-info-container">
-      <p-card>
-        <ng-template pTemplate="header">
-          <div class="flex align-items-center gap-3 p-4">
-            <p-avatar 
-              image="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-              size="xlarge" 
-              shape="circle">
-            </p-avatar>
-            <div>
-              <h2 class="m-0">John Doe</h2>
-              <p class="text-600 m-0">john.doe&#64;example.com</p>
-            </div>
-          </div>
-        </ng-template>
-        
-        <div class="account-details">
-          <div class="field">
-            <label class="font-semibold">Username:</label>
-            <p>&#64;johndoe</p>
-          </div>
-          
-          <div class="field">
-            <label class="font-semibold">Phone:</label>
-            <p>+1 (555) 123-4567</p>
-          </div>
-          
-          <div class="field">
-            <label class="font-semibold">Status:</label>
-            <p class="text-green-600">Online</p>
-          </div>
-          
-          <div class="field">
-            <label class="font-semibold">Member since:</label>
-            <p>January 2024</p>
-          </div>
+<div class="account-info-container">
+  <p-toast></p-toast>
+  
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <p-card *ngIf="!loading && currentUser">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-3 p-4">
+        <p-avatar 
+          [image]="currentUser.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'"
+          size="xlarge" 
+          shape="circle">
+        </p-avatar>
+        <div>
+          <h2 class="m-0">{{ currentUser.fullName }}</h2>
+          <p class="text-600 m-0">{{ currentUser.email }}</p>
         </div>
-        
-        <ng-template pTemplate="footer">
-          <div class="flex gap-2">
-            <p-button label="Edit Profile" icon="pi pi-pencil" />
-            <p-button label="Back to Chat" icon="pi pi-arrow-left" severity="secondary" (click)="goBack()" />
-          </div>
-        </ng-template>
-      </p-card>
+      </div>
+    </ng-template>
+    
+    <div class="account-details">
+      <div class="field">
+        <label class="font-semibold">Username:</label>
+        <p>{{ '@' + currentUser.username }}</p>
+      </div>
+      
+      <div class="field" *ngIf="currentUser.phone">
+        <label class="font-semibold">Phone:</label>
+        <p>{{ currentUser.phone }}</p>
+      </div>
+      
+      <div class="field">
+        <label class="font-semibold">Status:</label>
+        <p [ngClass]="getStatusClass(currentUser.status || 'offline')">
+          {{ (currentUser.status || 'offline') | titlecase }}
+        </p>
+      </div>
+      
+      <div class="field" *ngIf="currentUser.memberSince">
+        <label class="font-semibold">Member since:</label>
+        <p>{{ currentUser.memberSince }}</p>
+      </div>
     </div>
+    
+    <ng-template pTemplate="footer">
+      <div class="flex gap-2">
+        <p-button label="Edit Profile" icon="pi pi-pencil" (click)="editProfile()" />
+        <p-button label="Back to Chat" icon="pi pi-arrow-left" severity="secondary" (click)="goBack()" />
+      </div>
+    </ng-template>
+  </p-card>
+
+  <!-- Edit Profile Modal -->
+  <p-dialog 
+    header="Edit Profile" 
+    [(visible)]="editProfileVisible" 
+    [modal]="true" 
+    [style]="{width: '500px'}"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <!-- Avatar Upload -->
+      <div class="field mb-4">
+        <label class="font-semibold block mb-2">Profile Picture</label>
+        <div class="flex align-items-center gap-3 mb-2">
+          <p-avatar 
+            [image]="currentUser?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'"
+            size="large" 
+            shape="circle">
+          </p-avatar>
+          <p-fileUpload 
+            mode="basic" 
+            name="avatar"
+            accept="image/*"
+            [maxFileSize]="2000000"
+            chooseLabel="Change Photo"
+            (onSelect)="onAvatarSelect($event)"
+            [auto]="false">
+          </p-fileUpload>
+        </div>
+      </div>
+
+      <!-- Full Name -->
+      <div class="field mb-3">
+        <label for="fullName" class="font-semibold block mb-2">Full Name *</label>
+        <input 
+          pInputText 
+          id="fullName" 
+          formControlName="fullName"
+          class="w-full"
+          [class.ng-invalid]="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched" />
+        <small class="p-error block mt-1" *ngIf="getFieldError('fullName')">
+          {{ getFieldError('fullName') }}
+        </small>
+      </div>
+
+      <!-- Username -->
+      <div class="field mb-3">
+        <label for="username" class="font-semibold block mb-2">Username *</label>
+        <input 
+          pInputText 
+          id="username" 
+          formControlName="username"
+          class="w-full"
+          [class.ng-invalid]="profileForm.get('username')?.invalid && profileForm.get('username')?.touched" />
+        <small class="p-error block mt-1" *ngIf="getFieldError('username')">
+          {{ getFieldError('username') }}
+        </small>
+      </div>
+
+      <!-- Email -->
+      <div class="field mb-3">
+        <label for="email" class="font-semibold block mb-2">Email *</label>
+        <input 
+          pInputText 
+          id="email" 
+          type="email"
+          formControlName="email"
+          class="w-full"
+          [class.ng-invalid]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" />
+        <small class="p-error block mt-1" *ngIf="getFieldError('email')">
+          {{ getFieldError('email') }}
+        </small>
+      </div>
+
+      <!-- Phone -->
+      <div class="field mb-4">
+        <label for="phone" class="font-semibold block mb-2">Phone</label>
+        <input 
+          pInputText 
+          id="phone" 
+          formControlName="phone"
+          class="w-full" 
+          placeholder="Optional" />
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end gap-2">
+        <p-button 
+          label="Cancel" 
+          icon="pi pi-times" 
+          severity="secondary" 
+          (click)="cancelEdit()"
+          [disabled]="loading" />
+        <p-button 
+          label="Save Changes" 
+          icon="pi pi-check" 
+          (click)="saveProfile()"
+          [loading]="loading" />
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

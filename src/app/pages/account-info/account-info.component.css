@@ -1,0 +1,59 @@
+ .account-info-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+    
+    .account-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .field label {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    
+    .field p {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .p-dialog .p-dialog-content {
+      padding: 1.5rem;
+    }
+
+    .p-fileupload-basic {
+      margin-left: 1rem;
+    }
+
+    .p-error {
+      color: #e24c4c;
+      font-size: 0.875rem;
+    }
+
+    .ng-invalid.ng-touched {
+      border-color: #e24c4c;
+    }
+
+    :host ::ng-deep .p-avatar {
+      border: 2px solid #e5e7eb;
+    }
+
+    :host ::ng-deep .p-button {
+      min-width: auto;
+    }

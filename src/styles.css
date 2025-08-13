@@ -11,8 +11,8 @@ html, body {
 
 /* Light Theme Variables */
 .light-theme {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
+  --bg-primary: #fbfefb;
+  --bg-secondary: #eef0f2;
   --bg-tertiary: #f1f5f9;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
