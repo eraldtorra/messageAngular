@@ -6,6 +6,8 @@ import { AccountInfoComponent } from './pages/account-info/account-info.componen
 import { RegisterComponent } from './pages/register/register.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { NewGroupComponent } from './pages/new-group/new-group.component';
+import { NewDirectMessageComponent } from './pages/new-direct-message/new-direct-message.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -43,6 +45,16 @@ export const routes: Routes = [
     {
         path: 'account-info',
         component: AccountInfoComponent,
+        // canActivate: [() => authGuard()]
+    },
+    {
+        path: 'new-group',
+        component: NewGroupComponent,
+        // canActivate: [() => authGuard()]
+    },
+    {
+        path: 'new-direct-message',
+        component: NewDirectMessageComponent,
         // canActivate: [() => authGuard()]
     },
     {

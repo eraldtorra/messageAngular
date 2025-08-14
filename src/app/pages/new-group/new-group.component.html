@@ -1,0 +1,118 @@
+<div class="new-group-container">
+  <div class="new-group-card">
+    <div class="card-header">
+      <h2><i class="pi pi-users"></i> Create New Group</h2>
+    </div>
+    
+    <div class="card-content">
+      <div class="form-section">
+        <!-- Group Name -->
+        <div class="form-group">
+          <label for="groupName" class="form-label">
+            <i class="pi pi-tag"></i>
+            Group Name *
+          </label>
+          <input 
+            id="groupName"
+            type="text" 
+            pInputText 
+            [(ngModel)]="groupName" 
+            placeholder="Enter a creative group name..."
+            class="form-input"
+            required
+          />
+        </div>
+
+        <!-- Group Description -->
+        <div class="form-group">
+          <label for="groupDescription" class="form-label">
+            <i class="pi pi-file-edit"></i>
+            Description
+          </label>
+          <textarea 
+            id="groupDescription"
+            pInputTextarea 
+            [(ngModel)]="groupDescription" 
+            placeholder="What's this group about? (optional)"
+            rows="3"
+            class="form-input"
+          ></textarea>
+        </div>
+
+        <!-- Add Members -->
+        <div class="form-group">
+          <label for="userSearch" class="form-label">
+            <i class="pi pi-search"></i>
+            Add Members
+          </label>
+          <input 
+            id="userSearch"
+            type="text" 
+            pInputText 
+            [(ngModel)]="searchQuery" 
+            placeholder="Search users by name or email..."
+            class="form-input"
+          />
+          
+          <!-- Selected Users -->
+          <div class="selected-users" *ngIf="selectedUsers.length > 0">
+            <h4>Selected Members ({{ selectedUsers.length }})</h4>
+            <div class="chips-container">
+              <p-chip 
+                *ngFor="let user of selectedUsers" 
+                [label]="user" 
+                [removable]="true"
+                (onRemove)="removeUser(user)"
+                styleClass="user-chip"
+              ></p-chip>
+            </div>
+          </div>
+
+          <!-- Available Users -->
+          <div class="users-list" *ngIf="searchQuery.length > 0">
+            <div 
+              class="user-item" 
+              *ngFor="let user of filteredUsers"
+              [class.selected]="selectedUsers.includes(user.name)"
+              (click)="addUser(user)"
+            >
+              <p-avatar 
+                [label]="user.avatar" 
+                shape="circle" 
+                size="normal"
+                styleClass="user-avatar"
+              ></p-avatar>
+              <div class="user-info">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="user-email">{{ user.email }}</span>
+              </div>
+              <i 
+                class="pi" 
+                [class.pi-check]="selectedUsers.includes(user.name)"
+                [class.pi-plus]="!selectedUsers.includes(user.name)"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <p-button 
+          label="Cancel" 
+          icon="pi pi-times"
+          severity="secondary" 
+          (onClick)="cancel()"
+          styleClass="cancel-btn"
+        ></p-button>
+        <p-button 
+          label="Create Group" 
+          icon="pi pi-check"
+          [disabled]="!groupName.trim() || selectedUsers.length === 0"
+          (onClick)="createGroup()"
+          styleClass="create-btn"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+</div>

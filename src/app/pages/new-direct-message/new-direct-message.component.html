@@ -1,0 +1,134 @@
+<div class="new-dm-container">
+  <div class="new-dm-card">
+    <div class="card-header">
+      <h2><i class="pi pi-comments"></i> New Direct Message</h2>
+    </div>
+    
+    <div class="card-content">
+      <div class="form-section">
+        <!-- User Search -->
+        <div class="form-group">
+          <label for="userSearch" class="form-label">
+            <i class="pi pi-search"></i>
+            Find a person to message
+          </label>
+          <div class="search-wrapper">
+            <input 
+              id="userSearch"
+              type="text" 
+              pInputText 
+              [(ngModel)]="searchQuery" 
+              placeholder="Search by name or email..."
+              class="form-input"
+              (input)="selectedUser = null"
+            />
+            <button 
+              *ngIf="selectedUser || searchQuery" 
+              class="clear-btn" 
+              (click)="clearSelection()"
+              type="button"
+            >
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected User Display -->
+        <div class="selected-user" *ngIf="selectedUser">
+          <h4>Message to:</h4>
+          <div class="user-card selected">
+            <div class="avatar-wrapper">
+              <p-avatar 
+                [label]="selectedUser.avatar" 
+                shape="circle" 
+                size="normal"
+                styleClass="user-avatar"
+              ></p-avatar>
+              <div 
+                class="status-indicator" 
+                [style.background-color]="getStatusColor(selectedUser.status)"
+              ></div>
+            </div>
+            <div class="user-info">
+              <span class="user-name">{{ selectedUser.name }}</span>
+              <span class="user-email">{{ selectedUser.email }}</span>
+              <span class="user-status" [class]="selectedUser.status">
+                {{ selectedUser.status | titlecase }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Search Results -->
+        <div class="users-list" *ngIf="searchQuery.length > 0 && !selectedUser">
+          <h4>Select a person:</h4>
+          <div 
+            class="user-card" 
+            *ngFor="let user of filteredUsers"
+            (click)="selectUser(user)"
+          >
+            <div class="avatar-wrapper">
+              <p-avatar 
+                [label]="user.avatar" 
+                shape="circle" 
+                size="normal"
+                styleClass="user-avatar"
+              ></p-avatar>
+              <div 
+                class="status-indicator" 
+                [style.background-color]="getStatusColor(user.status)"
+              ></div>
+            </div>
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-email">{{ user.email }}</span>
+              <span class="user-status" [class]="user.status">
+                {{ user.status | titlecase }}
+              </span>
+            </div>
+            <i class="pi pi-arrow-right"></i>
+          </div>
+          
+          <!-- No results -->
+          <div class="no-results" *ngIf="filteredUsers.length === 0">
+            <i class="pi pi-search"></i>
+            <p>No users found matching "{{ searchQuery }}"</p>
+          </div>
+        </div>
+
+        <!-- Optional Message -->
+        <div class="form-group" *ngIf="selectedUser">
+          <label for="message" class="form-label">
+            <i class="pi pi-pencil"></i>
+            Start with a message (optional)
+          </label>
+          <textarea 
+            id="message"
+            [(ngModel)]="message" 
+            placeholder="Type your message here..."
+            rows="3"
+            class="form-input message-input"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <p-button 
+          label="Cancel" 
+          icon="pi pi-times"
+          severity="secondary" 
+          (onClick)="cancel()"
+          styleClass="cancel-btn"
+        ></p-button>
+        <p-button 
+          label="Start Conversation" 
+          icon="pi pi-send"
+          [disabled]="!selectedUser"
+          (onClick)="startDirectMessage()"
+          styleClass="start-btn"
+        ></p-button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -51,6 +51,16 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/account-info']);
   }
 
+  navigateToNewGroup() {
+    // Navigate to new group page
+    this.router.navigate(['/new-group']);
+  }
+
+  navigateToNewDirectMessage() {
+    // Navigate to new direct message page
+    this.router.navigate(['/new-direct-message']);
+  }
+
   toggleDarkMode() {
     this.themeService.toggleTheme();
     // Update the menu item label and icon with a slight delay for smooth transition
@@ -108,11 +118,13 @@ export class HomeComponent implements OnInit {
             },
             {
                 label: 'New Direct Message',
-                icon: 'pi pi-pencil'
+                icon: 'pi pi-pencil',
+                command: () => this.navigateToNewDirectMessage()
             },
             {
                 label: 'New Group',
-                icon: 'pi pi-users'
+                icon: 'pi pi-users',
+                command: () => this.navigateToNewGroup()
             },
             {
                 separator: true
