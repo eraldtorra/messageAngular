@@ -1,11 +1,13 @@
 .new-dm-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
+  max-height: 100vh;
   padding: 2rem;
   background: linear-gradient(135deg, var(--surface-ground) 0%, var(--surface-100) 100%);
   position: relative;
+  overflow-y: auto;
 }
 
 .new-dm-container::before {
@@ -22,6 +24,7 @@
 .new-dm-card {
   width: 100%;
   max-width: 600px;
+  max-height: calc(100vh - 4rem);
   background: var(--surface-card);
   border-radius: 24px;
   box-shadow: 
@@ -34,6 +37,8 @@
   position: relative;
   z-index: 1;
   animation: slideInUp 0.6s ease-out;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes slideInUp {
@@ -86,12 +91,18 @@
 .card-content {
   padding: 2.5rem;
   background: var(--surface-card);
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-section {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .form-group {
@@ -209,7 +220,7 @@
 }
 
 .users-list {
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
   border: 2px solid var(--surface-border);
   border-radius: 16px;
@@ -415,10 +426,12 @@
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 3rem;
-  padding-top: 2rem;
+  margin-top: auto;
+  padding: 2rem 2.5rem;
   border-top: 2px solid var(--surface-border);
   position: relative;
+  background: var(--surface-card);
+  flex-shrink: 0;
 }
 
 .action-buttons::before {

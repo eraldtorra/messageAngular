@@ -23,17 +23,17 @@
     <form (ngSubmit)="login()" class="login-form">
       <div class="form-group">
         <div class="input-wrapper">
-          <i class="pi pi-user input-icon"></i>
+          <i class="pi pi-envelope input-icon"></i>
           <input 
             required 
-            type="text" 
+            type="email" 
             class="form-input" 
-            [(ngModel)]="username" 
-            name="username"
-          
-            [class.has-value]="username.length > 0"
+            [(ngModel)]="email" 
+            name="email"
+            placeholder="Enter your email"
+            [class.has-value]="email.length > 0"
           >
-          <label class="form-label">Username</label>
+          <label class="form-label">Email</label>
         </div>
       </div>
 
@@ -46,10 +46,26 @@
             class="form-input" 
             [(ngModel)]="password" 
             name="password"
-           
+            placeholder="Enter your password"
             [class.has-value]="password.length > 0"
           >
           <label class="form-label">Password</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-wrapper">
+          <input 
+            type="checkbox" 
+            id="rememberMe"
+            [(ngModel)]="rememberMe" 
+            name="rememberMe"
+            class="checkbox-input"
+          >
+          <label for="rememberMe" class="checkbox-label">
+            <span class="checkbox-custom"></span>
+            Remember me
+          </label>
         </div>
       </div>
 

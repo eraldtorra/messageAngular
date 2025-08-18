@@ -1,0 +1,159 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "johndoe",
+      "email": "john@example.com",
+      "fullName": "John Doe",
+      "phone": "+1-555-0101",
+      "avatar": "JD",
+      "status": "online",
+      "memberSince": "2023-01-15"
+    },
+    {
+      "id": "2",
+      "username": "janesmith",
+      "email": "jane@example.com",
+      "fullName": "Jane Smith",
+      "phone": "+1-555-0102",
+      "avatar": "JS",
+      "status": "offline",
+      "memberSince": "2023-02-20"
+    },
+    {
+      "id": "3",
+      "username": "mikejohnson",
+      "email": "mike@example.com",
+      "fullName": "Mike Johnson",
+      "phone": "+1-555-0103",
+      "avatar": "MJ",
+      "status": "online",
+      "memberSince": "2023-03-10"
+    },
+    {
+      "id": "4",
+      "username": "sarahwilson",
+      "email": "sarah@example.com",
+      "fullName": "Sarah Wilson",
+      "phone": "+1-555-0104",
+      "avatar": "SW",
+      "status": "away",
+      "memberSince": "2023-01-25"
+    },
+    {
+      "id": "5",
+      "username": "davidbrown",
+      "email": "david@example.com",
+      "fullName": "David Brown",
+      "phone": "+1-555-0105",
+      "avatar": "DB",
+      "status": "online",
+      "memberSince": "2023-04-05"
+    },
+    {
+      "id": "6",
+      "username": "emmadavis",
+      "email": "emma@example.com",
+      "fullName": "Emma Davis",
+      "phone": "+1-555-0106",
+      "avatar": "ED",
+      "status": "offline",
+      "memberSince": "2023-02-14"
+    },
+    {
+      "id": "7",
+      "username": "alexmiller",
+      "email": "alex@example.com",
+      "fullName": "Alex Miller",
+      "phone": "+1-555-0107",
+      "avatar": "AM",
+      "status": "online",
+      "memberSince": "2023-05-12"
+    },
+    {
+      "id": "8",
+      "username": "lisagarcia",
+      "email": "lisa@example.com",
+      "fullName": "Lisa Garcia",
+      "phone": "+1-555-0108",
+      "avatar": "LG",
+      "status": "away",
+      "memberSince": "2023-03-22"
+    },
+    {
+      "id": "9",
+      "username": "robertlee",
+      "email": "robert@example.com",
+      "fullName": "Robert Lee",
+      "phone": "+1-555-0109",
+      "avatar": "RL",
+      "status": "online",
+      "memberSince": "2023-06-01"
+    },
+    {
+      "id": "10",
+      "username": "marialopez",
+      "email": "maria@example.com",
+      "fullName": "Maria Lopez",
+      "phone": "+1-555-0110",
+      "avatar": "ML",
+      "status": "offline",
+      "memberSince": "2023-04-18"
+    },
+    {
+      "id": "11",
+      "username": "chrisanderson",
+      "email": "chris@example.com",
+      "fullName": "Chris Anderson",
+      "phone": "+1-555-0111",
+      "avatar": "CA",
+      "status": "online",
+      "memberSince": "2023-07-03"
+    },
+    {
+      "id": "12",
+      "username": "amywhite",
+      "email": "amy@example.com",
+      "fullName": "Amy White",
+      "phone": "+1-555-0112",
+      "avatar": "AW",
+      "status": "away",
+      "memberSince": "2023-05-27"
+    },
+    {
+      "id": "13",
+      "username": "kevinmartinez",
+      "email": "kevin@example.com",
+      "fullName": "Kevin Martinez",
+      "phone": "+1-555-0113",
+      "avatar": "KM",
+      "status": "online",
+      "memberSince": "2023-08-15"
+    },
+    {
+      "id": "14",
+      "username": "rachelthomas",
+      "email": "rachel@example.com",
+      "fullName": "Rachel Thomas",
+      "phone": "+1-555-0114",
+      "avatar": "RT",
+      "status": "offline",
+      "memberSince": "2023-06-30"
+    },
+    {
+      "id": "15",
+      "username": "stevejackson",
+      "email": "steve@example.com",
+      "fullName": "Steve Jackson",
+      "phone": "+1-555-0115",
+      "avatar": "SJ",
+      "status": "online",
+      "memberSince": "2023-07-22"
+    }
+  ],
+  "metadata": {
+    "totalUsers": 15,
+    "lastUpdated": "2025-08-18",
+    "version": "1.0"
+  }
+}

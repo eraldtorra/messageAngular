@@ -45,15 +45,20 @@ export class ForgotPasswordComponent {
 
     // Call the auth service to send reset email
     this.authService.forgotPassword(this.email).subscribe({
-      next: (response: any) => {
-        console.log('Password reset email sent', response);
-        this.successMessage = 'Password reset instructions have been sent to your email address.';
-        this.isEmailSent = true;
-        this.isLoading = false;
+      next: (response) => {
+        if (response.success) {
+          console.log('Password reset email sent', response);
+          this.successMessage = response.message;
+          this.isEmailSent = true;
+          this.isLoading = false;
+        } else {
+          this.errorMessage = response.message;
+          this.isLoading = false;
+        }
       },
       error: (error: any) => {
-        console.error('Failed to send reset email', error);
-        this.errorMessage = error.error?.message || 'Failed to send reset email. Please try again.';
+        console.error('Password reset failed', error);
+        this.errorMessage = 'Service unavailable. Please try again later.';
         this.isLoading = false;
       }
     });

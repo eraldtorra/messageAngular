@@ -2,9 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsernameService } from '../../services/username.service';
 import { FormsModule } from '@angular/forms';
-import { AuthServiceService } from '../../services/AuthService.service';
+import { AuthServiceService, LoginRequest } from '../../services/AuthService.service';
 import { CommonModule } from '@angular/common';
-import { Token } from '../../models/token';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
@@ -15,8 +14,9 @@ import { ThemeService } from '../../services/theme.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = '';
   password: string = '';
+  rememberMe: boolean = false;
   errorMessage: string = '';
   isLoading: boolean = false;
 
@@ -28,29 +28,35 @@ export class LoginComponent {
   ) {}
 
   login() {
-    if (!this.username || !this.password) {
-      this.errorMessage = 'Please enter both username and password';
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Please enter both email and password';
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.login(this.username, this.password).subscribe({
-      next: (response: Token) => {
-        // Handle successful login
-        console.log('Login successful', response);
-        // Store token or user info in localStorage/sessionStorage if needed
-        localStorage.setItem('token', response.token);
-        this.usernameService.setUsername(this.username);
-        // Redirect to home page  
-        this.router.navigate(['/home']);
+    const loginRequest: LoginRequest = {
+      email: this.email,
+      password: this.password,
+      remember: this.rememberMe
+    };
+
+    this.authService.login(loginRequest).subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('Login successful', response);
+          this.usernameService.setUsername(response.user?.username || '');
+          // Redirect to home page  
+          this.router.navigate(['/home']);
+        } else {
+          this.errorMessage = response.message;
+        }
         this.isLoading = false;
       },
       error: (error) => {
-        // Handle login error
         console.error('Login failed', error);
-        this.errorMessage = 'Invalid username or password';
+        this.errorMessage = 'Login service unavailable. Please try again.';
         this.isLoading = false;
       }
     });

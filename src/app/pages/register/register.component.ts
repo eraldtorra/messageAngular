@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthServiceService } from '../../services/AuthService.service';
+import { AuthServiceService, RegisterRequest } from '../../services/AuthService.service';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
@@ -13,10 +13,14 @@ import { ThemeService } from '../../services/theme.service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+  fullName: string = '';
   username: string = '';
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
+  phone: string = '';
+  termsAccepted: boolean = false;
+  newsletterSubscription: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
   isLoading: boolean = false;
@@ -33,8 +37,8 @@ export class RegisterComponent {
     this.successMessage = '';
 
     // Validation
-    if (!this.username || !this.email || !this.password || !this.confirmPassword) {
-      this.errorMessage = 'Please fill in all fields';
+    if (!this.fullName || !this.username || !this.email || !this.password || !this.confirmPassword) {
+      this.errorMessage = 'Please fill in all required fields';
       return;
     }
 
@@ -53,23 +57,44 @@ export class RegisterComponent {
       return;
     }
 
+    if (!this.termsAccepted) {
+      this.errorMessage = 'You must accept the terms and conditions';
+      return;
+    }
+
     this.isLoading = true;
 
+    const registerRequest: RegisterRequest = {
+      fullName: this.fullName,
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+      phone: this.phone,
+      termsAccepted: this.termsAccepted,
+      newsletterSubscription: this.newsletterSubscription
+    };
+
     // Call the auth service to register
-    this.authService.register(this.username, this.email, this.password).subscribe({
-      next: (response: any) => {
-        console.log('Registration successful', response);
-        this.successMessage = 'Account created successfully! Redirecting to login...';
-        this.isLoading = false;
-        
-        // Redirect to login after 2 seconds
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
+    this.authService.register(registerRequest).subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('Registration successful', response);
+          this.successMessage = 'Account created successfully! Redirecting to home...';
+          this.isLoading = false;
+          
+          // Redirect to home after 2 seconds
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 2000);
+        } else {
+          this.errorMessage = response.message;
+          this.isLoading = false;
+        }
       },
       error: (error: any) => {
         console.error('Registration failed', error);
-        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        this.errorMessage = 'Registration service unavailable. Please try again.';
         this.isLoading = false;
       }
     });

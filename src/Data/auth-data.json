@@ -1,0 +1,192 @@
+{
+  "authData": {
+    "users": [
+      {
+        "id": "1",
+        "username": "admin",
+        "email": "admin@example.com",
+        "password": "admin123",
+        "fullName": "Administrator",
+        "role": "admin",
+        "isActive": true,
+        "registeredAt": "2023-01-01T00:00:00Z",
+        "lastLogin": "2025-08-18T10:30:00Z"
+      },
+      {
+        "id": "2",
+        "username": "johndoe",
+        "email": "john@example.com",
+        "password": "john123",
+        "fullName": "John Doe",
+        "role": "user",
+        "isActive": true,
+        "registeredAt": "2023-01-15T08:00:00Z",
+        "lastLogin": "2025-08-18T09:15:00Z"
+      },
+      {
+        "id": "3",
+        "username": "janesmith",
+        "email": "jane@example.com",
+        "password": "jane123",
+        "fullName": "Jane Smith",
+        "role": "user",
+        "isActive": true,
+        "registeredAt": "2023-02-20T14:30:00Z",
+        "lastLogin": "2025-08-17T16:45:00Z"
+      },
+      {
+        "id": "4",
+        "username": "mikejohnson",
+        "email": "mike@example.com",
+        "password": "mike123",
+        "fullName": "Mike Johnson",
+        "role": "moderator",
+        "isActive": true,
+        "registeredAt": "2023-03-10T11:20:00Z",
+        "lastLogin": "2025-08-18T07:30:00Z"
+      },
+      {
+        "id": "5",
+        "username": "sarahwilson",
+        "email": "sarah@example.com",
+        "password": "sarah123",
+        "fullName": "Sarah Wilson",
+        "role": "user",
+        "isActive": true,
+        "registeredAt": "2023-01-25T16:45:00Z",
+        "lastLogin": "2025-08-16T20:10:00Z"
+      },
+      {
+        "id": "6",
+        "username": "davidbrown",
+        "email": "david@example.com",
+        "password": "david123",
+        "fullName": "David Brown",
+        "role": "user",
+        "isActive": false,
+        "registeredAt": "2023-04-05T09:15:00Z",
+        "lastLogin": "2025-07-15T12:00:00Z"
+      },
+      {
+        "id": "7",
+        "username": "emmadavis",
+        "email": "emma@example.com",
+        "password": "emma123",
+        "fullName": "Emma Davis",
+        "role": "user",
+        "isActive": true,
+        "registeredAt": "2023-02-14T13:30:00Z",
+        "lastLogin": "2025-08-17T18:20:00Z"
+      },
+      {
+        "id": "8",
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "test123",
+        "fullName": "Test User",
+        "role": "user",
+        "isActive": true,
+        "registeredAt": "2023-08-01T10:00:00Z",
+        "lastLogin": "2025-08-18T08:45:00Z"
+      }
+    ],
+    "loginCredentials": [
+      {
+        "email": "admin@example.com",
+        "password": "admin123",
+        "remember": false
+      },
+      {
+        "email": "john@example.com",
+        "password": "john123",
+        "remember": true
+      },
+      {
+        "email": "jane@example.com",
+        "password": "jane123",
+        "remember": false
+      },
+      {
+        "email": "mike@example.com",
+        "password": "mike123",
+        "remember": true
+      },
+      {
+        "email": "test@example.com",
+        "password": "test123",
+        "remember": false
+      }
+    ],
+    "registrationData": [
+      {
+        "fullName": "Alex Miller",
+        "email": "alex@example.com",
+        "username": "alexmiller",
+        "password": "alex123",
+        "confirmPassword": "alex123",
+        "phone": "+1-555-0107",
+        "termsAccepted": true,
+        "newsletterSubscription": true,
+        "registeredAt": "2023-05-12T15:20:00Z"
+      },
+      {
+        "fullName": "Lisa Garcia",
+        "email": "lisa@example.com",
+        "username": "lisagarcia",
+        "password": "lisa123",
+        "confirmPassword": "lisa123",
+        "phone": "+1-555-0108",
+        "termsAccepted": true,
+        "newsletterSubscription": false,
+        "registeredAt": "2023-03-22T12:45:00Z"
+      },
+      {
+        "fullName": "Robert Lee",
+        "email": "robert@example.com",
+        "username": "robertlee",
+        "password": "robert123",
+        "confirmPassword": "robert123",
+        "phone": "+1-555-0109",
+        "termsAccepted": true,
+        "newsletterSubscription": true,
+        "registeredAt": "2023-06-01T09:30:00Z"
+      }
+    ],
+    "passwordResetRequests": [
+      {
+        "email": "john@example.com",
+        "resetToken": "abc123xyz789",
+        "requestedAt": "2025-08-17T14:30:00Z",
+        "expiresAt": "2025-08-17T15:30:00Z",
+        "isUsed": false
+      },
+      {
+        "email": "sarah@example.com",
+        "resetToken": "def456uvw012",
+        "requestedAt": "2025-08-16T10:15:00Z",
+        "expiresAt": "2025-08-16T11:15:00Z",
+        "isUsed": true
+      }
+    ],
+    "authSettings": {
+      "passwordMinLength": 6,
+      "passwordRequireUppercase": false,
+      "passwordRequireNumbers": true,
+      "passwordRequireSpecialChars": false,
+      "maxLoginAttempts": 5,
+      "lockoutDurationMinutes": 15,
+      "sessionTimeoutMinutes": 60,
+      "allowRememberMe": true,
+      "requireEmailVerification": false
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-08-18",
+    "totalUsers": 8,
+    "activeUsers": 7,
+    "totalLoginCredentials": 5,
+    "totalRegistrations": 3,
+    "pendingPasswordResets": 1
+  }
+}

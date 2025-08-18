@@ -20,7 +20,7 @@
               [(ngModel)]="searchQuery" 
               placeholder="Search by name or email..."
               class="form-input"
-              (input)="selectedUser = null"
+              (input)="onSearchChange(); selectedUser = null"
             />
             <button 
               *ngIf="selectedUser || searchQuery" 
@@ -46,11 +46,11 @@
               ></p-avatar>
               <div 
                 class="status-indicator" 
-                [style.background-color]="getStatusColor(selectedUser.status)"
+                [style.background-color]="getStatusColor(selectedUser.status || 'offline')"
               ></div>
             </div>
             <div class="user-info">
-              <span class="user-name">{{ selectedUser.name }}</span>
+              <span class="user-name">{{ selectedUser.fullName }}</span>
               <span class="user-email">{{ selectedUser.email }}</span>
               <span class="user-status" [class]="selectedUser.status">
                 {{ selectedUser.status | titlecase }}
@@ -60,8 +60,8 @@
         </div>
 
         <!-- User Search Results -->
-        <div class="users-list" *ngIf="searchQuery.length > 0 && !selectedUser">
-          <h4>Select a person:</h4>
+        <div class="users-list" *ngIf="(searchQuery.length > 0 || filteredUsers.length > 0) && !selectedUser">
+          <h4>{{ searchQuery.length > 0 ? 'Search results:' : 'All users:' }}</h4>
           <div 
             class="user-card" 
             *ngFor="let user of filteredUsers"
@@ -76,11 +76,11 @@
               ></p-avatar>
               <div 
                 class="status-indicator" 
-                [style.background-color]="getStatusColor(user.status)"
+                [style.background-color]="getStatusColor(user.status || 'offline')"
               ></div>
             </div>
             <div class="user-info">
-              <span class="user-name">{{ user.name }}</span>
+              <span class="user-name">{{ user.fullName }}</span>
               <span class="user-email">{{ user.email }}</span>
               <span class="user-status" [class]="user.status">
                 {{ user.status | titlecase }}
@@ -90,11 +90,12 @@
           </div>
           
           <!-- No results -->
-          <div class="no-results" *ngIf="filteredUsers.length === 0">
+          <div class="no-results" *ngIf="filteredUsers.length === 0 && searchQuery.length > 0">
             <i class="pi pi-search"></i>
             <p>No users found matching "{{ searchQuery }}"</p>
           </div>
         </div>
+
 
         <!-- Optional Message -->
         <div class="form-group" *ngIf="selectedUser">
@@ -111,24 +112,24 @@
           ></textarea>
         </div>
       </div>
+    </div>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <p-button 
-          label="Cancel" 
-          icon="pi pi-times"
-          severity="secondary" 
-          (onClick)="cancel()"
-          styleClass="cancel-btn"
-        ></p-button>
-        <p-button 
-          label="Start Conversation" 
-          icon="pi pi-send"
-          [disabled]="!selectedUser"
-          (onClick)="startDirectMessage()"
-          styleClass="start-btn"
-        ></p-button>
-      </div>
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <p-button 
+        label="Cancel" 
+        icon="pi pi-times"
+        severity="secondary" 
+        (onClick)="cancel()"
+        styleClass="cancel-btn"
+      ></p-button>
+      <p-button 
+        label="Start Conversation" 
+        icon="pi pi-send"
+        [disabled]="!selectedUser"
+        (onClick)="startDirectMessage()"
+        styleClass="start-btn"
+      ></p-button>
     </div>
   </div>
 </div>

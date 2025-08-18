@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,6 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
 import { ChipModule } from 'primeng/chip';
+import { UserDataService } from '../../services/user-data.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-new-direct-message',
@@ -20,38 +22,53 @@ import { ChipModule } from 'primeng/chip';
   templateUrl: './new-direct-message.component.html',
   styleUrl: './new-direct-message.component.css'
 })
-export class NewDirectMessageComponent {
+export class NewDirectMessageComponent implements OnInit {
   router = inject(Router);
+  userDataService = inject(UserDataService);
   
   searchQuery: string = '';
-  selectedUser: any = null;
+  selectedUser: User | null = null;
   message: string = '';
-  
-  // Mock users for demonstration - replace with actual user service
-  availableUsers = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', avatar: 'JD', status: 'online' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', avatar: 'JS', status: 'offline' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@example.com', avatar: 'MJ', status: 'online' },
-    { id: 4, name: 'Sarah Wilson', email: 'sarah@example.com', avatar: 'SW', status: 'away' },
-    { id: 5, name: 'David Brown', email: 'david@example.com', avatar: 'DB', status: 'online' },
-    { id: 6, name: 'Emma Davis', email: 'emma@example.com', avatar: 'ED', status: 'offline' }
-  ];
+  availableUsers: User[] = [];
+  filteredUsers: User[] = [];
 
-  get filteredUsers() {
-    return this.availableUsers.filter(user => 
-      user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  ngOnInit() {
+    this.loadUsers();
   }
 
-  selectUser(user: any) {
+  loadUsers() {
+    this.userDataService.getAllUsers().subscribe({
+      next: (users) => {
+        this.availableUsers = users;
+        this.filteredUsers = users;
+      },
+      error: (error) => {
+        console.error('Error loading users:', error);
+      }
+    });
+  }
+
+  onSearchChange() {
+    if (this.searchQuery.trim() === '') {
+      this.filteredUsers = this.availableUsers;
+    } else {
+      this.filteredUsers = this.availableUsers.filter(user => 
+        user.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+  }
+
+  selectUser(user: User) {
     this.selectedUser = user;
-    this.searchQuery = user.name;
+    this.searchQuery = user.fullName;
   }
 
   clearSelection() {
     this.selectedUser = null;
     this.searchQuery = '';
+    this.filteredUsers = this.availableUsers;
   }
 
   startDirectMessage() {
@@ -63,7 +80,7 @@ export class NewDirectMessageComponent {
       this.router.navigate(['/home'], { 
         queryParams: { 
           userId: this.selectedUser.id,
-          userName: this.selectedUser.name 
+          userName: this.selectedUser.fullName 
         }
       });
     }
