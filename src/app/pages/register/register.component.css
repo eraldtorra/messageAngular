@@ -107,12 +107,12 @@
 .register-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 20px;
+  padding: 80px 20px 40px 20px;
   position: relative;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Background decoration */
@@ -451,7 +451,7 @@
   }
   
   .register-container {
-    padding: 16px;
+    padding: 70px 16px 30px 16px;
   }
   
   .register-card {

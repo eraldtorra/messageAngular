@@ -9,53 +9,59 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { NewGroupComponent } from './pages/new-group/new-group.component';
 import { NewDirectMessageComponent } from './pages/new-direct-message/new-direct-message.component';
 import { authGuard } from './guards/auth.guard';
+import { guestGuard } from './guards/guest.guard';
 
 export const routes: Routes = [
 
     {
         path: '',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [() => guestGuard()]
     },
     {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [() => guestGuard()]
     },
     {
         path: 'register',
-        component: RegisterComponent
+        component: RegisterComponent,
+        canActivate: [() => guestGuard()]
     },
     {
         path: 'forgot-password',
-        component: ForgotPasswordComponent
+        component: ForgotPasswordComponent,
+        canActivate: [() => guestGuard()]
     },
     {
         path: 'reset-password',
-        component: ResetPasswordComponent
+        component: ResetPasswordComponent,
+        canActivate: [() => guestGuard()]
     },
     {
         path: 'home',
         component: HomeComponent,
-        // canActivate: [() => authGuard()]
+        canActivate: [() => authGuard()]
     },
     {
        path: "messages",
        component: ChatComponent,
-    //    canActivate: [() => authGuard()]
+       canActivate: [() => authGuard()]
     },
     {
         path: 'account-info',
         component: AccountInfoComponent,
-        // canActivate: [() => authGuard()]
+        canActivate: [() => authGuard()]
     },
     {
         path: 'new-group',
         component: NewGroupComponent,
-        // canActivate: [() => authGuard()]
+        canActivate: [() => authGuard()]
     },
     {
         path: 'new-direct-message',
         component: NewDirectMessageComponent,
-        // canActivate: [() => authGuard()]
+        canActivate: [() => authGuard()]
     },
     {
         path: '**',

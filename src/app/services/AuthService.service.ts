@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { AuthDataManagerService, UserData } from './auth-data-manager.service';
 
 export interface LoginRequest {
   email: string;
@@ -43,79 +44,113 @@ export interface LoginResponse {
 export class AuthServiceService {
   private http = inject(HttpClient);
   private router = inject(Router);
+  private authDataManager = inject(AuthDataManagerService);
   private currentUser: AuthUser | null = null;
 
-  // Load auth data from JSON file
+  // Load auth data from JSON file and merge with localStorage users
   private loadAuthData(): Observable<any> {
     return this.http.get<any>('/assets/data/auth-data.json').pipe(
-      map(response => response.authData),
+      map(response => {
+        // Get base users from JSON file
+        const baseUsers = response.authData.users || [];
+        
+        // Get additional users from localStorage
+        const localUsersJson = localStorage.getItem('registeredUsers');
+        const localUsers = localUsersJson ? JSON.parse(localUsersJson) : [];
+        
+        // Merge users
+        const allUsers = [...baseUsers, ...localUsers];
+        
+        return {
+          users: allUsers,
+          ...response.authData
+        };
+      }),
       catchError(error => {
         console.error('Error loading auth data:', error);
-        return throwError(() => new Error('Failed to load authentication data'));
+        // If JSON fails, at least return localStorage users
+        const localUsersJson = localStorage.getItem('registeredUsers');
+        const localUsers = localUsersJson ? JSON.parse(localUsersJson) : [];
+        
+        return of({
+          users: localUsers,
+          passwordResetRequests: []
+        });
       })
     );
   }
 
   // Login method
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.loadAuthData().pipe(
-      map(authData => {
-        // Find user by email
-        const user = authData.users.find((u: any) => 
-          u.email === request.email && u.isActive
-        );
+    // Find user using AuthDataManager
+    const user = this.authDataManager.findUserByEmail(request.email);
 
-        if (!user) {
-          return {
-            success: false,
-            message: 'User not found or account is inactive'
-          };
-        }
+    if (!user) {
+      return of({
+        success: false,
+        message: 'User not found or account is inactive'
+      });
+    }
 
-        // Check password
-        if (user.password !== request.password) {
-          return {
-            success: false,
-            message: 'Invalid email or password'
-          };
-        }
+    if (!user.isActive) {
+      return of({
+        success: false,
+        message: 'Account is inactive'
+      });
+    }
 
-        // Generate mock token
-        const token = this.generateMockToken(user);
+    // Check password
+    if (user.password !== request.password) {
+      return of({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
 
-        // Store user data
-        this.currentUser = {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          fullName: user.fullName,
-          role: user.role,
-          isActive: user.isActive
-        };
+    // Update last login
+    this.authDataManager.updateLastLogin(user.id);
 
-        // Store in localStorage if remember me is checked
-        if (request.remember) {
-          localStorage.setItem('authToken', token);
-          localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-        } else {
-          sessionStorage.setItem('authToken', token);
-          sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-        }
+    // Generate mock token
+    const token = this.generateMockToken(user);
 
-        return {
-          success: true,
-          message: 'Login successful',
-          user: this.currentUser,
-          token: token
-        };
-      }),
-      catchError(error => {
-        return of({
-          success: false,
-          message: 'Login service unavailable'
-        });
-      })
-    );
+    // Store user data
+    this.currentUser = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+      isActive: user.isActive
+    };
+
+    // Store in localStorage if remember me is checked
+    if (request.remember) {
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    } else {
+      sessionStorage.setItem('authToken', token);
+      sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    }
+
+    return of({
+      success: true,
+      message: 'Login successful',
+      user: this.currentUser,
+      token: token
+    });
+  }
+
+  // Helper method to update last login time
+  private updateLastLogin(userId: string): void {
+    const localUsersJson = localStorage.getItem('registeredUsers');
+    if (localUsersJson) {
+      const localUsers = JSON.parse(localUsersJson);
+      const userIndex = localUsers.findIndex((u: any) => u.id === userId);
+      if (userIndex !== -1) {
+        localUsers[userIndex].lastLogin = new Date().toISOString();
+        localStorage.setItem('registeredUsers', JSON.stringify(localUsers));
+      }
+    }
   }
 
   // Register method
@@ -134,92 +169,126 @@ export class AuthServiceService {
       });
     }
 
-    return this.loadAuthData().pipe(
-      map(authData => {
-        // Check if email already exists
-        const existingUser = authData.users.find((u: any) => 
-          u.email === request.email
-        );
+    // Check if email already exists
+    const existingEmailUser = this.authDataManager.findUserByEmail(request.email);
+    if (existingEmailUser) {
+      return of({
+        success: false,
+        message: 'Email already registered'
+      });
+    }
 
-        if (existingUser) {
-          return {
-            success: false,
-            message: 'Email already registered'
-          };
-        }
+    // Check if username already exists
+    const existingUsernameUser = this.authDataManager.findUserByUsername(request.username);
+    if (existingUsernameUser) {
+      return of({
+        success: false,
+        message: 'Username already taken'
+      });
+    }
 
-        // Check if username already exists
-        const existingUsername = authData.users.find((u: any) => 
-          u.username === request.username
-        );
+    try {
+      // Create new user using AuthDataManager
+      const newUser = this.authDataManager.addUser({
+        username: request.username,
+        email: request.email.toLowerCase(),
+        password: request.password,
+        fullName: request.fullName,
+        phone: request.phone || '',
+        role: 'user',
+        isActive: true,
+        lastLogin: null,
+        newsletterSubscription: request.newsletterSubscription || false
+      });
 
-        if (existingUsername) {
-          return {
-            success: false,
-            message: 'Username already taken'
-          };
-        }
+      // Create AuthUser object for session
+      const authUser: AuthUser = {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        fullName: newUser.fullName,
+        role: newUser.role,
+        isActive: newUser.isActive
+      };
 
-        // Create new user (in real app, this would be sent to server)
-        const newUser: AuthUser = {
-          id: (authData.users.length + 1).toString(),
-          username: request.username,
-          email: request.email,
-          fullName: request.fullName,
-          role: 'user',
-          isActive: true
-        };
+      // Generate mock token
+      const token = this.generateMockToken(authUser);
 
-        // Generate mock token
-        const token = this.generateMockToken(newUser);
+      // Store user data in session
+      this.currentUser = authUser;
+      sessionStorage.setItem('authToken', token);
+      sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
 
-        // Store user data
-        this.currentUser = newUser;
-        sessionStorage.setItem('authToken', token);
-        sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      // Print updated auth data to console
+      setTimeout(() => {
+        console.log('🎉 REGISTRATION SUCCESSFUL!');
+        console.log('💾 User saved to auth-data structure');
+        this.authDataManager.printAuthDataToConsole();
+      }, 100);
 
-        return {
-          success: true,
-          message: 'Registration successful',
-          user: this.currentUser,
-          token: token
-        };
-      }),
-      catchError(error => {
-        return of({
-          success: false,
-          message: 'Registration service unavailable'
-        });
-      })
-    );
+      return of({
+        success: true,
+        message: 'Registration successful - Data saved to auth-data structure',
+        user: this.currentUser,
+        token: token
+      });
+
+    } catch (error) {
+      return of({
+        success: false,
+        message: 'Registration failed: ' + error
+      });
+    }
+  }
+
+    // Get all users (for debugging)
+  getAllUsers(): UserData[] {
+    return this.authDataManager.getAllUsers();
+  }
+
+  // Export auth data as downloadable file  
+  downloadAuthData(): void {
+    this.authDataManager.downloadAuthDataFile();
+  }
+
+  // Print auth data to console
+  printAuthDataToConsole(): void {
+    this.authDataManager.printAuthDataToConsole();
+  }
+
+  // Reset database (for testing)
+  resetDatabase(): Observable<void> {
+    return this.authDataManager.resetAuthData();
+  }
+
+  // Helper method to generate unique user ID
+  private generateUserId(existingUsers: any[]): string {
+    let maxId = 0;
+    existingUsers.forEach(user => {
+      const id = parseInt(user.id);
+      if (id > maxId) {
+        maxId = id;
+      }
+    });
+    return (maxId + 1).toString();
   }
 
   // Forgot password method
   forgotPassword(email: string): Observable<{success: boolean, message: string}> {
-    return this.loadAuthData().pipe(
-      map(authData => {
-        const user = authData.users.find((u: any) => u.email === email);
+    const user = this.authDataManager.findUserByEmail(email);
 
-        if (!user) {
-          return {
-            success: false,
-            message: 'Email not found'
-          };
-        }
+    if (!user) {
+      return of({
+        success: false,
+        message: 'Email not found'
+      });
+    }
 
-        // In real app, would send reset email
-        return {
-          success: true,
-          message: 'Password reset link sent to your email'
-        };
-      }),
-      catchError(error => {
-        return of({
-          success: false,
-          message: 'Service unavailable'
-        });
-      })
-    );
+    // In real app, would send reset email
+    return of({
+      success: true,
+      message: 'Password reset link sent to your email'
+    });
   }
 
   // Reset password method
@@ -293,6 +362,17 @@ export class AuthServiceService {
     sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('currentUser');
     this.router.navigate(['/login']);
+  }
+
+  // Helper method to clear all registered users (for testing)
+  clearRegisteredUsers(): void {
+    localStorage.removeItem('registeredUsers');
+  }
+
+  // Get all registered users (for debugging)
+  getRegisteredUsers(): any[] {
+    const localUsersJson = localStorage.getItem('registeredUsers');
+    return localUsersJson ? JSON.parse(localUsersJson) : [];
   }
 
   // Generate mock JWT token

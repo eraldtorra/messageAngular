@@ -28,8 +28,25 @@
             required 
             type="text" 
             class="form-input" 
+            [(ngModel)]="fullName" 
+            name="fullName"
+            placeholder="Enter your full name"
+            [class.has-value]="fullName.length > 0"
+          >
+          <label class="form-label">Full Name</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <i class="pi pi-at input-icon"></i>
+          <input 
+            required 
+            type="text" 
+            class="form-input" 
             [(ngModel)]="username" 
             name="username"
+            placeholder="Choose a username"
             [class.has-value]="username.length > 0"
           >
           <label class="form-label">Username</label>
@@ -45,9 +62,25 @@
             class="form-input" 
             [(ngModel)]="email" 
             name="email"
+            placeholder="Enter your email"
             [class.has-value]="email.length > 0"
           >
           <label class="form-label">Email</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <i class="pi pi-phone input-icon"></i>
+          <input 
+            type="tel" 
+            class="form-input" 
+            [(ngModel)]="phone" 
+            name="phone"
+            placeholder="Enter your phone number (optional)"
+            [class.has-value]="phone.length > 0"
+          >
+          <label class="form-label">Phone (Optional)</label>
         </div>
       </div>
 
@@ -60,6 +93,7 @@
             class="form-input" 
             [(ngModel)]="password" 
             name="password"
+            placeholder="Enter your password"
             [class.has-value]="password.length > 0"
           >
           <label class="form-label">Password</label>
@@ -75,9 +109,43 @@
             class="form-input" 
             [(ngModel)]="confirmPassword" 
             name="confirmPassword"
+            placeholder="Confirm your password"
             [class.has-value]="confirmPassword.length > 0"
           >
           <label class="form-label">Confirm Password</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-wrapper">
+          <input 
+            type="checkbox" 
+            id="termsAccepted"
+            [(ngModel)]="termsAccepted" 
+            name="termsAccepted"
+            class="checkbox-input"
+            required
+          >
+          <label for="termsAccepted" class="checkbox-label">
+            <span class="checkbox-custom"></span>
+            I agree to the <a href="#" class="terms-link">Terms and Conditions</a>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-wrapper">
+          <input 
+            type="checkbox" 
+            id="newsletterSubscription"
+            [(ngModel)]="newsletterSubscription" 
+            name="newsletterSubscription"
+            class="checkbox-input"
+          >
+          <label for="newsletterSubscription" class="checkbox-label">
+            <span class="checkbox-custom"></span>
+            Subscribe to newsletter (optional)
+          </label>
         </div>
       </div>
 
