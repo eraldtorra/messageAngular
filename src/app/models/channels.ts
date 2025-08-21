@@ -3,6 +3,10 @@ export interface Channel {
   name: string;
   lastMessage: string;
   timestamp: string;
-  avatar: string;       
+  avatar: string;
+  unreadCount?: number;
   isOnline?: boolean;
- }
+  isMuted?: boolean;
+  isGroup?: boolean;
+  participants?: string[];
+}

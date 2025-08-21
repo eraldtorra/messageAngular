@@ -1,0 +1,130 @@
+{
+  "channels": [
+    {
+      "id": 1,
+      "name": "Bill Kuphal",
+      "lastMessage": "Hey there! How are you doing today?",
+      "timestamp": "9:41 AM",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face",
+      "isOnline": true,
+      "unreadCount": 0,
+      "isMuted": false,
+      "isGroup": false,
+      "participants": ["Bill Kuphal"]
+    },
+    {
+      "id": 2,
+      "name": "Photography Team",
+      "lastMessage": "Sarah Wilson: Check out this amazing sunset shot! 📸",
+      "timestamp": "9:16 AM",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face",
+      "unreadCount": 80,
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": true,
+      "participants": ["John Doe", "Jane Smith", "Mike Johnson", "Sarah Wilson", "Emma Davis"]
+    },
+    {
+      "id": 3,
+      "name": "Project Alpha",
+      "lastMessage": "Daryl Bogisich: Let's schedule the team meeting for tomorrow at 2 PM",
+      "timestamp": "Yesterday",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face",
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": true,
+      "participants": ["Daryl Bogisich", "Ian Daniel", "Alex Miller", "Lisa Garcia"]
+    },
+    {
+      "id": 4,
+      "name": "SpaceX Updates",
+      "lastMessage": "Elon Musk: Next Starship launch scheduled for next week! 🚀",
+      "timestamp": "Thursday",
+      "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=50&h=50&fit=crop&crop=face",
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": true,
+      "participants": ["Elon Musk", "Tom Mueller", "Gwynne Shotwell", "Steve Jackson"]
+    },
+    {
+      "id": 5,
+      "name": "Design Team",
+      "lastMessage": "Amy White: New mockups are ready for review 🎨",
+      "timestamp": "Wednesday",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=50&h=50&fit=crop&crop=face",
+      "unreadCount": 12,
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": true,
+      "participants": ["Alex Miller", "Lisa Garcia", "Amy White", "Rachel Thomas"]
+    },
+    {
+      "id": 6,
+      "name": "Roland Marks",
+      "lastMessage": "Thanks for all your help with the project! Really appreciate it 🙏",
+      "timestamp": "12/16/21",
+      "avatar": "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=50&h=50&fit=crop&crop=face",
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": false,
+      "participants": ["Roland Marks"]
+    },
+    {
+      "id": 7,
+      "name": "Helen Flatley",
+      "lastMessage": "See you later! Have a great weekend 😊",
+      "timestamp": "12/13/21",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face",
+      "isOnline": true,
+      "isMuted": false,
+      "isGroup": false,
+      "participants": ["Helen Flatley"]
+    },
+    {
+      "id": 8,
+      "name": "Development Team",
+      "lastMessage": "Kevin Martinez: Code review is complete, ready to merge! ✅",
+      "timestamp": "12/10/21",
+      "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=50&h=50&fit=crop&crop=face",
+      "unreadCount": 5,
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": true,
+      "participants": ["Kevin Martinez", "Rachel Thomas", "Steve Jackson", "Chris Anderson", "David Brown"]
+    },
+    {
+      "id": 10,
+      "name": "David Brown",
+      "lastMessage": "Let's discuss the new project requirements in detail tomorrow",
+      "timestamp": "12/05/21",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face",
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": false,
+      "participants": ["David Brown"]
+    },
+    {
+      "id": 12,
+      "name": "Product Strategy",
+      "lastMessage": "Alex Miller: Roadmap review meeting scheduled for Friday 📋",
+      "timestamp": "12/01/21",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face",
+      "unreadCount": 2,
+      "isOnline": false,
+      "isMuted": false,
+      "isGroup": true,
+      "participants": ["Alex Miller", "Lisa Garcia", "Roland Marks", "Bill Kuphal"]
+    }
+  ],
+  "metadata": {
+    "totalChannels": 12,
+    "activeChannels": 10,
+    "totalUnreadMessages": 110,
+    "lastUpdated": "2025-08-20",
+    "version": "1.1",
+    "groupChannels": 8,
+    "directMessages": 4,
+    "mutedChannels": 1,
+    "onlineUsers": 2
+  }
+}

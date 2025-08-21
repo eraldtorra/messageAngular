@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, Input, OnChanges, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
@@ -7,21 +7,9 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { ContextMenu } from 'primeng/contextmenu';
 import { MenuItem } from 'primeng/api';
 import { ChannelChatService } from '../../services/channelChat.service';
+import { ChannelDataService, Channel } from '../../services/channel-data.service';
 import { Subscription } from 'rxjs';
 
-
-interface Channel {
-  id: number;
-  name: string;
-  lastMessage: string;
-  timestamp: string;
-  avatar: string;
-  unreadCount?: number;
-  isOnline?: boolean;
-  isMuted?: boolean;
-  isGroup?: boolean;
-  participants?: string[];
-}
 
 @Component({
   selector: 'app-channel-list',
@@ -36,23 +24,63 @@ interface Channel {
   templateUrl: './channel-list.component.html',
   styleUrl: './channel-list.component.css'
 })
-export class ChannelListComponent implements OnInit, OnDestroy, OnChanges {
+export class ChannelListComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   @Input() searchFilter: string = '';
   @Input() showSearchResults: boolean = false;
   @ViewChild('contextMenu') contextMenu!: ContextMenu;
+  @ViewChild('channelListContainer', { static: false }) channelListContainer!: ElementRef;
 
   channelService = inject(ChannelChatService);
+  channelDataService = inject(ChannelDataService);
   
   channels: Channel[] = [];
   filteredChannels: Channel[] = [];
   selectedChannel = this.channelService.getSelectedChannel();
   private messageSubscription?: Subscription;
+  private channelsSubscription?: Subscription;
 
   contextMenuItems: MenuItem[] = [];
   selectedChannelForMenu?: Channel;
 
+  // Scroll-related properties
+  showScrollToTop = false;
+  isScrolling = false;
+
   ngOnInit() {
+    // Subscribe to channels from JSON data
+    this.channelsSubscription = this.channelDataService.getChannels().subscribe({
+      next: (channels) => {
+        this.channels = channels;
+        this.filterChannels();
+        
+        // Set the first channel as selected by default if no channel is selected yet
+        if (channels.length > 0 && !this.channelService.getSelectedChannel()()) {
+          this.channelService.setSelectedChannel(channels[0]);
+        }
+        
+        // Load sample messages for some channels to demonstrate
+        channels.slice(0, 2).forEach(channel => {
+          this.channelService.loadSampleMessagesForChannel(channel.id);
+        });
+      },
+      error: (error) => {
+        console.error('Error loading channels:', error);
+        // Fallback to hardcoded data if JSON loading fails
+        this.loadFallbackChannels();
+      }
+    });
+    
+    // Subscribe to message changes to update last messages
+    this.messageSubscription = this.channelService.messagesChanged$.subscribe((channelId) => {
+      this.updateChannelLastMessage(channelId);
+    });
+
+    // Initialize context menu items
+    this.initializeContextMenu();
+  }
+
+  loadFallbackChannels() {
     this.channels = [
       {
         id: 1,
@@ -111,16 +139,8 @@ export class ChannelListComponent implements OnInit, OnDestroy, OnChanges {
 
     this.channelService.setSelectedChannel(this.channels[0]); // Set the first channel as selected by default
     
-    // Subscribe to message changes to update last messages
-    this.messageSubscription = this.channelService.messagesChanged$.subscribe((channelId) => {
-      this.updateChannelLastMessage(channelId);
-    });
-
     // Initialize filtered channels
     this.filterChannels();
-
-    // Initialize context menu items
-    this.initializeContextMenu();
   }
 
   initializeContextMenu() {
@@ -185,9 +205,16 @@ export class ChannelListComponent implements OnInit, OnDestroy, OnChanges {
     return this.filteredChannels;
   }
 
+  trackByChannelId(index: number, channel: Channel): number {
+    return channel.id;
+  }
+
   ngOnDestroy() {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
+    }
+    if (this.channelsSubscription) {
+      this.channelsSubscription.unsubscribe();
     }
   }
 
@@ -243,34 +270,20 @@ export class ChannelListComponent implements OnInit, OnDestroy, OnChanges {
   toggleMute(mute: boolean) {
     if (!this.selectedChannelForMenu) return;
 
-    const channelIndex = this.channels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
-    if (channelIndex !== -1) {
-      this.channels[channelIndex].isMuted = mute;
-      // Update filtered channels as well
-      const filteredIndex = this.filteredChannels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
-      if (filteredIndex !== -1) {
-        this.filteredChannels[filteredIndex].isMuted = mute;
-      }
-      
-      // Optional: Add a toast notification
-      console.log(`Channel ${this.selectedChannelForMenu.name} ${mute ? 'muted' : 'unmuted'}`);
-    }
+    // Update through the service
+    this.channelDataService.toggleChannelMute(this.selectedChannelForMenu.id);
+    
+    // Optional: Add a toast notification
+    console.log(`Channel ${this.selectedChannelForMenu.name} ${mute ? 'muted' : 'unmuted'}`);
   }
 
   markAsRead() {
     if (!this.selectedChannelForMenu) return;
 
-    const channelIndex = this.channels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
-    if (channelIndex !== -1) {
-      this.channels[channelIndex].unreadCount = undefined;
-      // Update filtered channels as well
-      const filteredIndex = this.filteredChannels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
-      if (filteredIndex !== -1) {
-        this.filteredChannels[filteredIndex].unreadCount = undefined;
-      }
-      
-      console.log(`Marked ${this.selectedChannelForMenu.name} as read`);
-    }
+    // Update through the service
+    this.channelDataService.markChannelAsRead(this.selectedChannelForMenu.id);
+    
+    console.log(`Marked ${this.selectedChannelForMenu.name} as read`);
   }
 
   clearChatHistory() {
@@ -279,17 +292,111 @@ export class ChannelListComponent implements OnInit, OnDestroy, OnChanges {
     // Clear messages for this channel
     this.channelService.clearChannelMessages(this.selectedChannelForMenu.id);
     
-    // Update last message
-    const channelIndex = this.channels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
-    if (channelIndex !== -1) {
-      this.channels[channelIndex].lastMessage = '';
-      // Update filtered channels as well
-      const filteredIndex = this.filteredChannels.findIndex(c => c.id === this.selectedChannelForMenu!.id);
-      if (filteredIndex !== -1) {
-        this.filteredChannels[filteredIndex].lastMessage = '';
-      }
-    }
+    // Update last message through the service
+    this.channelDataService.updateChannelLastMessage(this.selectedChannelForMenu.id, '', '');
     
     console.log(`Cleared chat history for ${this.selectedChannelForMenu.name}`);
+  }
+
+  ngAfterViewInit() {
+    // Initialize scroll listeners
+    this.setupScrollListeners();
+  }
+
+  setupScrollListeners() {
+    if (this.channelListContainer) {
+      const element = this.channelListContainer.nativeElement;
+      
+      element.addEventListener('scroll', () => {
+        this.handleScroll();
+      });
+    }
+  }
+
+  handleScroll() {
+    if (!this.channelListContainer) return;
+    
+    const element = this.channelListContainer.nativeElement;
+    const scrollTop = element.scrollTop;
+    
+    // Show scroll-to-top button when scrolled down more than 200px
+    this.showScrollToTop = scrollTop > 200;
+    
+    // Add scrolling class for styling
+    if (!this.isScrolling) {
+      this.isScrolling = true;
+      element.classList.add('scrolling');
+      
+      // Remove scrolling class after scroll stops
+      setTimeout(() => {
+        this.isScrolling = false;
+        element.classList.remove('scrolling');
+      }, 150);
+    }
+  }
+
+  scrollToTop() {
+    if (this.channelListContainer) {
+      this.channelListContainer.nativeElement.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  scrollToChannel(channelId: number) {
+    const channelElement = document.querySelector(`[data-channel-id="${channelId}"]`);
+    if (channelElement && this.channelListContainer) {
+      const container = this.channelListContainer.nativeElement;
+      const elementTop = (channelElement as HTMLElement).offsetTop;
+      
+      container.scrollTo({
+        top: elementTop - 20, // 20px offset for better visibility
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  // Keyboard navigation for accessibility
+  @HostListener('keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (!this.channelListContainer) return;
+    
+    const channels = this.getDisplayChannels();
+    const selectedIndex = channels.findIndex(c => c.id === this.selectedChannel()?.id);
+    
+    switch (event.key) {
+      case 'ArrowUp':
+        event.preventDefault();
+        if (selectedIndex > 0) {
+          this.onChannelClick(channels[selectedIndex - 1]);
+          this.scrollToChannel(channels[selectedIndex - 1].id);
+        }
+        break;
+        
+      case 'ArrowDown':
+        event.preventDefault();
+        if (selectedIndex < channels.length - 1) {
+          this.onChannelClick(channels[selectedIndex + 1]);
+          this.scrollToChannel(channels[selectedIndex + 1].id);
+        }
+        break;
+        
+      case 'Home':
+        event.preventDefault();
+        if (channels.length > 0) {
+          this.onChannelClick(channels[0]);
+          this.scrollToTop();
+        }
+        break;
+        
+      case 'End':
+        event.preventDefault();
+        if (channels.length > 0) {
+          this.onChannelClick(channels[channels.length - 1]);
+          this.scrollToChannel(channels[channels.length - 1].id);
+        }
+        break;
+    }
   }
 }

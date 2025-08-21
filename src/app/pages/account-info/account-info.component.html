@@ -3,9 +3,10 @@
   
   <div *ngIf="loading" class="loading-container">
     <p-progressSpinner></p-progressSpinner>
+    <p class="text-center mt-3">Loading your account information...</p>
   </div>
 
-  <p-card *ngIf="!loading && currentUser">
+  <p-card *ngIf="!loading && currentUser" class="user-profile-card">
     <ng-template pTemplate="header">
       <div class="flex align-items-center gap-3 p-4">
         <p-avatar 
@@ -13,41 +14,144 @@
           size="xlarge" 
           shape="circle">
         </p-avatar>
-        <div>
-          <h2 class="m-0">{{ currentUser.fullName }}</h2>
-          <p class="text-600 m-0">{{ currentUser.email }}</p>
+        <div class="flex-1">
+          <div class="flex align-items-center gap-2 mb-2">
+            <h2 class="m-0">{{ currentUser.fullName }}</h2>
+            <p-tag 
+              [value]="getUserRole() | titlecase" 
+              [severity]="getUserRoleSeverity()"
+              class="text-xs">
+            </p-tag>
+          </div>
+          <p class="text-600 m-0 mb-1">{{ currentUser.email }}</p>
+          <div class="flex align-items-center gap-2">
+            <p-tag 
+              [value]="getAccountStatus()" 
+              [severity]="getAccountStatusSeverity()"
+              class="text-xs">
+            </p-tag>
+            <p-tag 
+              [value]="(currentUser.status || 'offline') | titlecase"
+              [severity]="currentUser.status === 'online' ? 'success' : currentUser.status === 'away' ? 'warning' : 'secondary'"
+              class="text-xs">
+            </p-tag>
+          </div>
         </div>
       </div>
     </ng-template>
     
+    <!-- User Information Section -->
     <div class="account-details">
-      <div class="field">
-        <label class="font-semibold">Username:</label>
-        <p>{{ '@' + currentUser.username }}</p>
-      </div>
+      <h3 class="mb-3 text-primary">
+        <i class="pi pi-user mr-2"></i>
+        Profile Information
+      </h3>
       
-      <div class="field" *ngIf="currentUser.phone">
-        <label class="font-semibold">Phone:</label>
-        <p>{{ currentUser.phone }}</p>
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label class="font-semibold text-sm">Username:</label>
+            <p class="mt-1">{{ '@' + currentUser.username }}</p>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label class="font-semibold text-sm">User ID:</label>
+            <p class="mt-1">{{ authUser?.id || currentUser.id }}</p>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6" *ngIf="currentUser.phone">
+          <div class="field">
+            <label class="font-semibold text-sm">Phone:</label>
+            <p class="mt-1">{{ currentUser.phone }}</p>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label class="font-semibold text-sm">Member since:</label>
+            <p class="mt-1">{{ currentUser.memberSince }}</p>
+          </div>
+        </div>
       </div>
+
+      <p-divider></p-divider>
+
+      <!-- Session Information -->
+      <h3 class="mb-3 text-primary">
+        <i class="pi pi-clock mr-2"></i>
+        Session Information
+      </h3>
       
-      <div class="field">
-        <label class="font-semibold">Status:</label>
-        <p [ngClass]="getStatusClass(currentUser.status || 'offline')">
-          {{ (currentUser.status || 'offline') | titlecase }}
-        </p>
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label class="font-semibold text-sm">Current Login:</label>
+            <p class="mt-1">{{ loginTime }}</p>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6" *ngIf="lastLoginTime">
+          <div class="field">
+            <label class="font-semibold text-sm">Last Login:</label>
+            <p class="mt-1">{{ lastLoginTime }}</p>
+          </div>
+        </div>
       </div>
+
+      <p-divider></p-divider>
+
+      <!-- Account Security -->
+      <h3 class="mb-3 text-primary">
+        <i class="pi pi-shield mr-2"></i>
+        Account Security
+      </h3>
       
-      <div class="field" *ngIf="currentUser.memberSince">
-        <label class="font-semibold">Member since:</label>
-        <p>{{ currentUser.memberSince }}</p>
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label class="font-semibold text-sm">Account Role:</label>
+            <div class="mt-1">
+              <p-tag 
+                [value]="getUserRole() | titlecase" 
+                [severity]="getUserRoleSeverity()">
+              </p-tag>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6">
+          <div class="field">
+            <label class="font-semibold text-sm">Account Status:</label>
+            <div class="mt-1">
+              <p-tag 
+                [value]="getAccountStatus()" 
+                [severity]="getAccountStatusSeverity()">
+              </p-tag>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
     <ng-template pTemplate="footer">
-      <div class="flex gap-2">
-        <p-button label="Edit Profile" icon="pi pi-pencil" (click)="editProfile()" />
-        <p-button label="Back to Chat" icon="pi pi-arrow-left" severity="secondary" (click)="goBack()" />
+      <div class="flex gap-2 flex-wrap">
+        <p-button 
+          label="Edit Profile" 
+          icon="pi pi-pencil" 
+          (click)="editProfile()" />
+        <p-button 
+          label="Back to Chat" 
+          icon="pi pi-arrow-left" 
+          severity="secondary" 
+          (click)="goBack()" />
+        <p-button 
+          label="Logout" 
+          icon="pi pi-sign-out" 
+          severity="danger" 
+          (click)="logout()" />
       </div>
     </ng-template>
   </p-card>
@@ -155,4 +259,33 @@
       </div>
     </ng-template>
   </p-dialog>
+
+  <!-- Not Logged In State -->
+  <p-card *ngIf="!loading && !currentUser" class="not-logged-in-card">
+    <ng-template pTemplate="header">
+      <div class="text-center p-4">
+        <i class="pi pi-exclamation-triangle text-6xl text-orange-500 mb-3"></i>
+        <h2 class="m-0 text-orange-600">Access Denied</h2>
+      </div>
+    </ng-template>
+    
+    <div class="text-center">
+      <p class="text-lg mb-4">You need to be logged in to view your account information.</p>
+      <p class="text-600 mb-4">Please log in to access your profile details, session information, and account settings.</p>
+    </div>
+    
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-center gap-2">
+        <p-button 
+          label="Go to Login" 
+          icon="pi pi-sign-in" 
+          (click)="goToLogin()" />
+        <p-button 
+          label="Back to Home" 
+          icon="pi pi-home" 
+          severity="secondary" 
+          (click)="goToHome()" />
+      </div>
+    </ng-template>
+  </p-card>
 </div>

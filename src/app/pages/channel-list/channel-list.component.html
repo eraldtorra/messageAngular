@@ -1,4 +1,4 @@
-<div class="channel-list">
+<div class="channel-list-wrapper">
   <!-- Context Menu -->
   <p-contextMenu #contextMenu [model]="contextMenuItems"></p-contextMenu>
   
@@ -11,57 +11,80 @@
   </div>
 
   <div 
-    *ngFor="let channel of getDisplayChannels()" 
-    class="channel-item"
-    [class.selected]="selectedChannel()?.id === channel.id"
-    [class.muted]="channel.isMuted"
-    pRipple
-    (click)="onChannelClick(channel)"
-    (contextmenu)="onChannelRightClick($event, channel)"
+    class="channel-list"
+    #channelListContainer
+    tabindex="0"
+    role="listbox"
+    aria-label="Channel list"
   >
-    <div class="avatar-container">
-      <p-avatar 
-        [image]="channel.avatar" 
-        size="large" 
-        shape="circle"
-        class="channel-avatar"
-      ></p-avatar>
-      <div *ngIf="channel.isOnline" class="online-indicator"></div>
-    </div>
-    
-    <div class="channel-content">
-      <div class="channel-header">
-        <h4 class="channel-name">{{ channel.name }}</h4>
-        <div class="channel-meta">
-          <i *ngIf="channel.isMuted" class="pi pi-volume-off mute-icon"></i>
-          
-          <!-- Show message count for search results -->
-          <span *ngIf="showSearchResults && hasMessagesInChannel(channel.id)" 
-                class="message-count text-xs">
-            {{ getMessageCount(channel.id) }} messages
-          </span>
-          
-          <span class="timestamp">{{ channel.timestamp }}</span>
-        </div>
+    <div 
+      *ngFor="let channel of getDisplayChannels(); trackBy: trackByChannelId" 
+      class="channel-item"
+      [class.selected]="selectedChannel()?.id === channel.id"
+      [class.muted]="channel.isMuted"
+      [attr.data-channel-id]="channel.id"
+      role="option"
+      [attr.aria-selected]="selectedChannel()?.id === channel.id"
+      [attr.aria-label]="channel.name + (channel.unreadCount ? ', ' + channel.unreadCount + ' unread messages' : '')"
+      pRipple
+      (click)="onChannelClick(channel)"
+      (contextmenu)="onChannelRightClick($event, channel)"
+    >
+      <div class="avatar-container">
+        <p-avatar 
+          [image]="channel.avatar" 
+          size="large" 
+          shape="circle"
+          class="channel-avatar"
+        ></p-avatar>
+        <div *ngIf="channel.isOnline" class="online-indicator"></div>
       </div>
       
-      <div class="channel-footer">
-        <p class="last-message" [class.own-message]="channel.lastMessage && channel.lastMessage.startsWith('You:')">
-          {{ channel.lastMessage || (showSearchResults && !hasMessagesInChannel(channel.id) ? 'No messages yet' : '') }}
-        </p>
-        <p-badge 
-          *ngIf="channel.unreadCount" 
-          [value]="channel.unreadCount.toString()" 
-          severity="danger"
-          class="unread-badge"
-        ></p-badge>
+      <div class="channel-content">
+        <div class="channel-header">
+          <h4 class="channel-name">{{ channel.name }}</h4>
+          <div class="channel-meta">
+            <i *ngIf="channel.isMuted" class="pi pi-volume-off mute-icon"></i>
+            
+            <!-- Show message count for search results -->
+            <span *ngIf="showSearchResults && hasMessagesInChannel(channel.id)" 
+                  class="message-count text-xs">
+              {{ getMessageCount(channel.id) }} messages
+            </span>
+            
+            <span class="timestamp">{{ channel.timestamp }}</span>
+          </div>
+        </div>
         
-        <!-- Message existence indicator -->
-        <div *ngIf="showSearchResults" class="message-indicator">
-          <i [class]="hasMessagesInChannel(channel.id) ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'" 
-             class="text-xs"></i>
+        <div class="channel-footer">
+          <p class="last-message" [class.own-message]="channel.lastMessage && channel.lastMessage.startsWith('You:')">
+            {{ channel.lastMessage || (showSearchResults && !hasMessagesInChannel(channel.id) ? 'No messages yet' : '') }}
+          </p>
+          <p-badge 
+            *ngIf="channel.unreadCount" 
+            [value]="channel.unreadCount.toString()" 
+            severity="danger"
+            class="unread-badge"
+          ></p-badge>
+          
+          <!-- Message existence indicator -->
+          <div *ngIf="showSearchResults" class="message-indicator">
+            <i [class]="hasMessagesInChannel(channel.id) ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'" 
+               class="text-xs"></i>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Scroll to top button -->
+  <button 
+    *ngIf="showScrollToTop"
+    class="scroll-to-top show"
+    (click)="scrollToTop()"
+    aria-label="Scroll to top"
+    title="Scroll to top"
+  >
+    <i class="pi pi-angle-up"></i>
+  </button>
 </div>

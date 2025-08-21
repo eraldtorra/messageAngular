@@ -1,59 +1,166 @@
- .account-info-container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-    
-    .loading-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 200px;
-    }
-    
-    .account-details {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    
-    .field label {
-      color: #6b7280;
-      font-size: 0.9rem;
-    }
-    
-    .field p {
-      margin: 0;
-      font-size: 1rem;
-    }
+.account-info-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
 
-    .p-dialog .p-dialog-content {
-      padding: 1.5rem;
-    }
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  gap: 1rem;
+}
 
-    .p-fileupload-basic {
-      margin-left: 1rem;
-    }
+.user-profile-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
 
-    .p-error {
-      color: #e24c4c;
-      font-size: 0.875rem;
-    }
+.not-logged-in-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 2px solid #fed7aa;
+}
 
-    .ng-invalid.ng-touched {
-      border-color: #e24c4c;
-    }
+.not-logged-in-card :host ::ng-deep .p-card-header {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: white;
+}
 
-    :host ::ng-deep .p-avatar {
-      border: 2px solid #e5e7eb;
-    }
+.account-details {
+  padding: 1rem 0;
+}
 
-    :host ::ng-deep .p-button {
-      min-width: auto;
-    }
+.account-details h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.field p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-color);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.grid .field:last-child p {
+  border-bottom: none;
+}
+
+.p-dialog .p-dialog-content {
+  padding: 1.5rem;
+}
+
+.p-fileupload-basic {
+  margin-left: 1rem;
+}
+
+.p-error {
+  color: #e24c4c;
+  font-size: 0.875rem;
+}
+
+.ng-invalid.ng-touched {
+  border-color: #e24c4c;
+}
+
+:host ::ng-deep .p-avatar {
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+:host ::ng-deep .p-button {
+  min-width: auto;
+  font-weight: 600;
+}
+
+:host ::ng-deep .p-tag {
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+:host ::ng-deep .p-card .p-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+:host ::ng-deep .p-card .p-card-header h2 {
+  color: white;
+}
+
+:host ::ng-deep .p-card .p-card-header .text-600 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+:host ::ng-deep .p-divider {
+  margin: 1.5rem 0;
+}
+
+:host ::ng-deep .p-divider .p-divider-content {
+  background: var(--surface-ground);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .account-info-container {
+    margin: 1rem;
+    padding: 0.5rem;
+  }
+  
+  .account-details h3 {
+    font-size: 1.1rem;
+  }
+  
+  .grid .col-12 {
+    padding: 0.5rem;
+  }
+  
+  :host ::ng-deep .p-button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  :host ::ng-deep .p-card .p-card-footer .flex {
+    flex-direction: column;
+  }
+}
+
+/* Dark theme adjustments */
+.dark-theme .field p {
+  border-bottom-color: #374151;
+}
+
+.dark-theme .field label {
+  color: #9ca3af;
+}
+
+/* Light theme adjustments */
+.light-theme .field p {
+  border-bottom-color: #e2e8f0;
+}
+
+.light-theme :host ::ng-deep .p-card .p-card-header {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+}

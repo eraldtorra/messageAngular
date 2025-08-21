@@ -9,9 +9,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TagModule } from 'primeng/tag';
+import { DividerModule } from 'primeng/divider';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../services/user.service';
+import { AuthServiceService, AuthUser } from '../../services/AuthService.service';
+import { UserDataService } from '../../services/user-data.service';
 import { User, UpdateUserRequest } from '../../models/user';
 
 @Component({
@@ -28,7 +32,9 @@ import { User, UpdateUserRequest } from '../../models/user';
     InputTextModule,
     FileUploadModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    TagModule,
+    DividerModule
   ],
   providers: [MessageService],
   templateUrl: './account-info.component.html',
@@ -36,14 +42,19 @@ import { User, UpdateUserRequest } from '../../models/user';
 })
 export class AccountInfoComponent implements OnInit {
   currentUser: User | null = null;
+  authUser: AuthUser | null = null;
   editProfileVisible = false;
   profileForm: FormGroup;
   loading = false;
   avatarFile: File | null = null;
+  loginTime: string = '';
+  lastLoginTime: string = '';
 
   constructor(
     private router: Router,
     private userService: UserService,
+    private authService: AuthServiceService,
+    private userDataService: UserDataService,
     private messageService: MessageService,
     private fb: FormBuilder
   ) {
@@ -57,44 +68,152 @@ export class AccountInfoComponent implements OnInit {
 
   ngOnInit() {
     this.loadUserProfile();
+    this.setLoginTime();
   }
 
   loadUserProfile() {
     this.loading = true;
-    this.userService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.currentUser = user;
-        this.userService.setCurrentUser(user);
-        this.loading = false;
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to load user profile'
-        });
-        this.loading = false;
-        // Fallback to mock data for development
-        this.setMockUserData();
-      }
+    
+    // Get authenticated user from AuthService
+    this.authUser = this.authService.getCurrentUser();
+    
+    if (this.authUser) {
+      // Try to get additional user data from users.json
+      this.userDataService.getUserById(this.authUser.id).subscribe({
+        next: (userData) => {
+          if (userData) {
+            // Merge auth user data with user profile data
+            this.currentUser = {
+              id: this.authUser!.id,
+              username: this.authUser!.username,
+              email: this.authUser!.email,
+              fullName: this.authUser!.fullName,
+              phone: userData.phone || '',
+              avatar: userData.avatar || this.generateAvatarUrl(this.authUser!.fullName),
+              status: userData.status || 'online',
+              memberSince: userData.memberSince || this.formatMemberSince()
+            };
+          } else {
+            // Use auth user data only
+            this.currentUser = {
+              id: this.authUser!.id,
+              username: this.authUser!.username,
+              email: this.authUser!.email,
+              fullName: this.authUser!.fullName,
+              phone: '',
+              avatar: this.generateAvatarUrl(this.authUser!.fullName),
+              status: 'online',
+              memberSince: this.formatMemberSince()
+            };
+          }
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('User data not found in users.json, using auth data only');
+          // Use auth user data only
+          this.currentUser = {
+            id: this.authUser!.id,
+            username: this.authUser!.username,
+            email: this.authUser!.email,
+            fullName: this.authUser!.fullName,
+            phone: '',
+            avatar: this.generateAvatarUrl(this.authUser!.fullName),
+            status: 'online',
+            memberSince: this.formatMemberSince()
+          };
+          this.loading = false;
+        }
+      });
+    } else {
+      // No authenticated user, redirect to login
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Not Authenticated',
+        detail: 'Please log in to view your account information'
+      });
+      this.router.navigate(['/login']);
+      this.loading = false;
+    }
+  }
+
+  private generateAvatarUrl(fullName: string): string {
+    const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+    // Generate a random avatar from a service like DiceBear or use Unsplash
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&size=200&background=3b82f6&color=ffffff&rounded=true`;
+  }
+
+  private formatMemberSince(): string {
+    // Get registration date from auth service if available
+    const allUsers = this.authService.getAllUsers();
+    const userData = allUsers.find(u => u.id === this.authUser?.id);
+    
+    if (userData && userData.registeredAt) {
+      return new Date(userData.registeredAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long'
+      });
+    }
+    
+    // Default to current month if no registration date
+    return new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long'
     });
   }
 
-  private setMockUserData() {
-    this.currentUser = {
-      id: '1',
-      username: 'johndoe',
-      email: 'john.doe@example.com',
-      fullName: 'John Doe',
-      phone: '+1 (555) 123-4567',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-      status: 'online',
-      memberSince: 'January 2024'
-    };
+  private setLoginTime() {
+    this.loginTime = new Date().toLocaleString();
+    
+    // Get last login from auth service
+    if (this.authUser) {
+      const allUsers = this.authService.getAllUsers();
+      const userData = allUsers.find(u => u.id === this.authUser?.id);
+      
+      if (userData && userData.lastLogin) {
+        this.lastLoginTime = new Date(userData.lastLogin).toLocaleString();
+      }
+    }
   }
   
   goBack() {
     this.router.navigate(['/home']);
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  goToHome() {
+    this.router.navigate(['/home']);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Logged Out',
+      detail: 'You have been successfully logged out'
+    });
+  }
+
+  getUserRole(): string {
+    return this.authUser?.role || 'user';
+  }
+
+  getUserRoleSeverity(): string {
+    switch (this.authUser?.role) {
+      case 'admin': return 'danger';
+      case 'moderator': return 'warning';
+      default: return 'info';
+    }
+  }
+
+  getAccountStatus(): string {
+    return this.authUser?.isActive ? 'Active' : 'Inactive';
+  }
+
+  getAccountStatusSeverity(): string {
+    return this.authUser?.isActive ? 'success' : 'danger';
   }
   
   editProfile() {
